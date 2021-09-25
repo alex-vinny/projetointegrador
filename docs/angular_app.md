@@ -1,0 +1,1 @@
+Seguir tutorial do site official: https://angular.io/guide/setup-local
