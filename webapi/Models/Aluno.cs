@@ -5,7 +5,7 @@ namespace ProjetoIntegrador.Api.Models
 {
     public class Aluno : Usuario
     {
-        public Aluno() : base(Perfis.Aluno) { }
+        public Aluno() { }
         
         public int? Idade { get; set; }
         public Sexos? Sexo { get; set; }

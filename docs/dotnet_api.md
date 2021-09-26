@@ -55,3 +55,6 @@ dotnet aspnet-codegenerator controller -f -name ProfessoresController -async -ap
 
 após isso, continuar para criar valores padrões para os testes:
 https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model?view=aspnetcore-5.0
+
+instalar o EF para postgre pois é o padrão do heroku
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
