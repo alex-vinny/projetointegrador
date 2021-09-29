@@ -2,36 +2,39 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProjetoIntegrador.Api.Models;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using ProjetoIntegrador.Api.Data;
 
-namespace api.Migrations
+namespace ProjetoIntegrador.Api.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    [Migration("20210925191201_InitialCreate")]
+    [Migration("20210928032401_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.10")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("ProjetoIntegrador.Api.Models.Categoria", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("Descricao")
+                        .IsUnique();
 
                     b.ToTable("Categorias");
                 });
@@ -40,23 +43,23 @@ namespace api.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("AutorID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("CategoriaID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Criacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("TamanhoX")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("TamanhoY")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -71,23 +74,23 @@ namespace api.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("CruzadaID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Orientacao")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("PalavraID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PosicaoX")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PosicaoY")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -102,49 +105,86 @@ namespace api.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("CategoriaID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Dica")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Valor")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
                     b.HasIndex("CategoriaID");
 
+                    b.HasIndex("Valor")
+                        .IsUnique();
+
                     b.ToTable("Palavras");
+                });
+
+            modelBuilder.Entity("ProjetoIntegrador.Api.Models.Sessao", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("Acertos")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CruzadaID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("Fim")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("Inicio")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("UsuarioID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CruzadaID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("Sessoes");
                 });
 
             modelBuilder.Entity("ProjetoIntegrador.Api.Models.Usuario", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Perfil")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Senha")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("Email", "Nome")
+                        .IsUnique();
 
                     b.ToTable("Usuarios");
 
@@ -156,13 +196,13 @@ namespace api.Migrations
                     b.HasBaseType("ProjetoIntegrador.Api.Models.Usuario");
 
                     b.Property<int?>("Idade")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("SerieEscolar")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Sexo")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasDiscriminator().HasValue("Aluno");
                 });
@@ -172,7 +212,7 @@ namespace api.Migrations
                     b.HasBaseType("ProjetoIntegrador.Api.Models.Usuario");
 
                     b.Property<string>("Disciplina")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasDiscriminator().HasValue("Professor");
                 });
@@ -194,15 +234,13 @@ namespace api.Migrations
 
             modelBuilder.Entity("ProjetoIntegrador.Api.Models.CruzadaItem", b =>
                 {
-                    b.HasOne("ProjetoIntegrador.Api.Models.Cruzada", "Cruzada")
-                        .WithMany()
+                    b.HasOne("ProjetoIntegrador.Api.Models.Cruzada", null)
+                        .WithMany("Itens")
                         .HasForeignKey("CruzadaID");
 
                     b.HasOne("ProjetoIntegrador.Api.Models.Palavra", "Palavra")
                         .WithMany()
                         .HasForeignKey("PalavraID");
-
-                    b.Navigation("Cruzada");
 
                     b.Navigation("Palavra");
                 });
@@ -214,6 +252,26 @@ namespace api.Migrations
                         .HasForeignKey("CategoriaID");
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("ProjetoIntegrador.Api.Models.Sessao", b =>
+                {
+                    b.HasOne("ProjetoIntegrador.Api.Models.Cruzada", "Cruzada")
+                        .WithMany()
+                        .HasForeignKey("CruzadaID");
+
+                    b.HasOne("ProjetoIntegrador.Api.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID");
+
+                    b.Navigation("Cruzada");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ProjetoIntegrador.Api.Models.Cruzada", b =>
+                {
+                    b.Navigation("Itens");
                 });
 #pragma warning restore 612, 618
         }

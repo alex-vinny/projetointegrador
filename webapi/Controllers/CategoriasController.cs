@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Models;
+using ProjetoIntegrador.Api.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace api.Controllers
 {
@@ -13,25 +12,25 @@ namespace api.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly BancoContext _context;
+        private readonly ICategoriaService service;
 
-        public CategoriasController(BancoContext context)
+        public CategoriasController(ICategoriaService context)
         {
-            _context = context;
+            service = context;
         }
 
         // GET: api/Categorias
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
         {
-            return await _context.Categorias.ToListAsync();
+            return await service.Categorias.ToListAsync();
         }
 
         // GET: api/Categorias/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Categoria>> GetCategoria(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var categoria = await service.Categorias.FindAsync(id);
 
             if (categoria == null)
             {
@@ -51,11 +50,11 @@ namespace api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(categoria).State = EntityState.Modified;
+            service.Entry(categoria).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await service.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -77,8 +76,8 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
         {
-            _context.Categorias.Add(categoria);
-            await _context.SaveChangesAsync();
+            service.Categorias.Add(categoria);
+            await service.SaveChangesAsync();
 
             return CreatedAtAction("GetCategoria", new { id = categoria.ID }, categoria);
         }
@@ -87,21 +86,21 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategoria(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var categoria = await service.Categorias.FindAsync(id);
             if (categoria == null)
             {
                 return NotFound();
             }
 
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
+            service.Categorias.Remove(categoria);
+            await service.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool CategoriaExists(int id)
         {
-            return _context.Categorias.Any(e => e.ID == id);
+            return service.Categorias.Any(e => e.ID == id);
         }
     }
 }

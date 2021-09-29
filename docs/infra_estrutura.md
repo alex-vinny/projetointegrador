@@ -25,11 +25,11 @@ caso ocorra erro de falta de memória:
 export NODE_OPTIONS=--max_old_space_size=4096
 
 comandos das imagens oficiais para build e deploy:
-docker build -t aspnetapi .
-docker build -t aspnetapi -f Dockerfile .
-docker run -d --rm -p 5000:5000 --name myapi aspnetapi
+docker build -t webapi .
+docker build -t webapi -f Dockerfile .
+docker run -d --rm -p 5000:5000 --name myapi webapi
 exemplo que funcionou:
-docker run --rm -d -p 5000:80 --name demoapp dotnet-docker-heroku
+docker run --rm -d -p 5000:80 --link db --name api webapi
 
 testar pelo navegador:
 http://localhost:5000/swagger/index.html

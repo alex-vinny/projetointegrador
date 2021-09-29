@@ -6,16 +6,9 @@ namespace ProjetoIntegrador.Api.Extensions
 {
     public static class DatabaseConfigExtensions
     {
-        public static string GetConnectionString(this IServiceCollection s)
+        public static string GetConnectionString(this IConnectionString service)
         {
-            string v = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-            return GetParser(v).GetConnectionString();
-        }
-
-        private static IConnectionStringParser GetParser(string conn)
-        {
-            return new PostgreStringParser(conn);
+            return service.GetParser().GetConnectionString();
         }
     }
 }

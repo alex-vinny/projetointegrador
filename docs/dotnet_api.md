@@ -14,10 +14,6 @@ dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
-conexão ao banco de dados:
-"Server=localhost,1434; User ID=sa; Password=Pr0j3to_1ntegRAD0R; Database=ProjetoIntegrador; Max Pool Size=1000; Application Name=WebAPI"
-"Data Source=localhost,1434;Initial Catalog=ProjetoIntegrador; User Id=sa; Password=Pr0j3to_1ntegRAD0R;"
-
 dropar database:
 dotnet ef database drop
 

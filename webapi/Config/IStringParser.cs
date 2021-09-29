@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace ProjetoIntegrador.Api.Config
 {
-    public interface IConnectionStringParser
+    public interface IStringParser
     {
         string GetPort();
         string GetHost();

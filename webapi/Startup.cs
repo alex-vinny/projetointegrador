@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProjetoIntegrador.Api.Models;
+using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Config;
 
 namespace ProjetoIntegrador.Api
 {
@@ -27,30 +29,18 @@ namespace ProjetoIntegrador.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            IConnectionString serviceConnection = new SettingsConnectionString(Configuration);
+            //IConnectionString serviceConnection = new EnvironmentConnectionString(Configuration);
+
             services.AddControllers();
-            //services.AddDbContext<BancoContext>(opt => opt.UseInMemoryDatabase("Cruzada"));
             services.AddDbContext<BancoContext>(options => 
-                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-                options.UseNpgsql(services.GetConnectionString()));
+                options.UseNpgsql(serviceConnection.GetConnectionString()));
 
             //services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
             });
-
-            /*
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = 
-                    ForwardedHeaders.XForwardedFor | 
-                    ForwardedHeaders.XForwardedProto;
-
-                options.KnownNetworks.Clear();
-                options.KnownProxies.Clear();
-            });
-            */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

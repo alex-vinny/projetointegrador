@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Models;
 
 namespace api.Controllers
@@ -24,14 +25,14 @@ namespace api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sessao>>> GetSessao()
         {
-            return await _context.Sessao.ToListAsync();
+            return await _context.Sessoes.ToListAsync();
         }
 
         // GET: api/Sessoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Sessao>> GetSessao(int id)
         {
-            var sessao = await _context.Sessao.FindAsync(id);
+            var sessao = await _context.Sessoes.FindAsync(id);
 
             if (sessao == null)
             {
@@ -77,7 +78,7 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult<Sessao>> PostSessao(Sessao sessao)
         {
-            _context.Sessao.Add(sessao);
+            _context.Sessoes.Add(sessao);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetSessao", new { id = sessao.ID }, sessao);
@@ -87,13 +88,13 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSessao(int id)
         {
-            var sessao = await _context.Sessao.FindAsync(id);
+            var sessao = await _context.Sessoes.FindAsync(id);
             if (sessao == null)
             {
                 return NotFound();
             }
 
-            _context.Sessao.Remove(sessao);
+            _context.Sessoes.Remove(sessao);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +102,7 @@ namespace api.Controllers
 
         private bool SessaoExists(int id)
         {
-            return _context.Sessao.Any(e => e.ID == id);
+            return _context.Sessoes.Any(e => e.ID == id);
         }
     }
 }

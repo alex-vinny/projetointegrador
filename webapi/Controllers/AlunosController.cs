@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Models;
 
 namespace api.Controllers
