@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private alerts: ToastrService
+  ) { }
 
   ngOnInit() {
+    this.alerts.error('Erro ao tentar identificar o usuário','Erro!', {
+      positionClass: 'toast-top-full-width',
+      timeOut: 2000
+    })
+
+    this.alerts.warning("Usuário não cadastrado,favor realizar o cadastro do usuário clicando em 'Cadastre-se aqui'",'Atenção!', {
+      positionClass: 'toast-top-full-width',
+      timeOut: 2000
+    })
   }
 
 }
