@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/ngx-toastr/toastr';
+
+@font-face {
+    font-family: 'Quicksand-Light';
+    src: url('./fonts/Quicksand-Light.ttf');
+}
+@font-face {
+    font-family: 'Quicksand-Regular';
+    src: url('./fonts/Quicksand-Regular.ttf');
+}
+@font-face {
+    font-family: 'Quicksand-Medium';
+    src: url('./fonts/Quicksand-Medium.ttf');
+}
+@font-face {
+    font-family: 'Quicksand-Bold';
+    src: url('./fonts/Quicksand-Bold.ttf');
+}
+*{
+    font-family: 'Quicksand-Regular';
+    font-size: 1rem;
+    
+}
+.material-icons-outlined{
+    margin-right: 5px;
+}
