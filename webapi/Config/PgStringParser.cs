@@ -9,6 +9,8 @@ namespace ProjetoIntegrador.Api.Config
             this.connection = connection;
         }
 
+        public bool Fail => string.IsNullOrEmpty(connection);
+
         private string GetLeft()
         {
             return connection.Split("@")[0].Replace("postgres://", "");

@@ -1,20 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ProjetoIntegrador.Api.Models;
-using ProjetoIntegrador.Api.Data;
-using ProjetoIntegrador.Api.Extensions;
+using Microsoft.OpenApi.Models;
 using ProjetoIntegrador.Api.Config;
+using ProjetoIntegrador.Api.Extensions;
 
 namespace ProjetoIntegrador.Api
 {
@@ -29,14 +19,10 @@ namespace ProjetoIntegrador.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IConnectionString serviceConnection = new SettingsConnectionString(Configuration);
-            //IConnectionString serviceConnection = new EnvironmentConnectionString(Configuration);
+            IConnectionString serviceConnection = new ConnectionStringStrategy(Configuration);
 
             services.AddControllers();
-            services.AddDbContext<BancoContext>(options => 
-                options.UseNpgsql(serviceConnection.GetConnectionString()));
-
-            //services.AddDatabaseDeveloperPageExceptionFilter();
+            serviceConnection.ConfigureDatabase(services);            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });

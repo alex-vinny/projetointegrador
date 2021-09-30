@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Models;
 using ProjetoIntegrador.Api.Services;
 using System.Collections.Generic;
@@ -21,86 +22,20 @@ namespace api.Controllers
 
         // GET: api/Categorias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
+        public async Task<ActionResult<IEnumerable<CategoriaDto>>> GetCategorias()
         {
-            return await service.Categorias.ToListAsync();
+            var categorias = await service.GetAll();
+
+            return categorias.ToList();
         }
 
-        // GET: api/Categorias/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Categoria>> GetCategoria(int id)
-        {
-            var categoria = await service.Categorias.FindAsync(id);
-
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            return categoria;
-        }
-
-        // PUT: api/Categorias/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategoria(int id, Categoria categoria)
-        {
-            if (id != categoria.ID)
-            {
-                return BadRequest();
-            }
-
-            service.Entry(categoria).State = EntityState.Modified;
-
-            try
-            {
-                await service.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoriaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Categorias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Categorias        
         [HttpPost]
-        public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
+        public async Task<ActionResult<CategoriaDto>> PostCategoria(string categoria)
         {
-            service.Categorias.Add(categoria);
-            await service.SaveChangesAsync();
+            var categoriaDto = await service.Save(new CategoriaDto { Categoria = categoria});
 
-            return CreatedAtAction("GetCategoria", new { id = categoria.ID }, categoria);
-        }
-
-        // DELETE: api/Categorias/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategoria(int id)
-        {
-            var categoria = await service.Categorias.FindAsync(id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            service.Categorias.Remove(categoria);
-            await service.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CategoriaExists(int id)
-        {
-            return service.Categorias.Any(e => e.ID == id);
+            return Created("PostCategoria", categoriaDto);
         }
     }
 }

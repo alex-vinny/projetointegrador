@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Api.Config;
 using ProjetoIntegrador.Api.Data;
+using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Models;
+using ProjetoIntegrador.Api.Services;
 
 namespace api.Controllers
 {
@@ -14,95 +17,55 @@ namespace api.Controllers
     [ApiController]
     public class PalavrasController : ControllerBase
     {
-        private readonly BancoContext _context;
+        private readonly IPalavraService service;
 
-        public PalavrasController(BancoContext context)
+        public PalavrasController(IPalavraService context)
         {
-            _context = context;
+            service = context;
         }
 
-        // GET: api/Palavras
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Palavra>>> GetPalavras()
+        // GET: api/Palavras/m/10/1
+        [HttpGet("{categoria}/{qtd}/{serie}")]
+        public async Task<ActionResult<IEnumerable<PalavraDto>>> GetPalavras(string categoria, int qtd, string serie)
         {
-            return await _context.Palavras.ToListAsync();
+            var palavras = await service.GetAll(
+                new PalavraDto 
+                { 
+                    Categoria = categoria, 
+                    Take = (qtd <= 0? Constants.QTD_PALAVRAS : qtd)
+                });
+
+            if(palavras.Any())
+                return palavras.ToList();
+
+            return NotFound();
         }
 
-        // GET: api/Palavras/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Palavra>> GetPalavra(int id)
+        // PUT: api/Categorias/
+        [HttpPut("{palavra}/{categoria}")]
+        public async Task<IActionResult> PutPalavra(string palavra, string categoria)
         {
-            var palavra = await _context.Palavras.FindAsync(id);
-
-            if (palavra == null)
-            {
-                return NotFound();
-            }
-
-            return palavra;
-        }
-
-        // PUT: api/Palavras/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPalavra(int id, Palavra palavra)
-        {
-            if (id != palavra.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(palavra).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PalavraExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await service.UpdateCategoria(palavra, categoria);
 
             return NoContent();
         }
 
         // POST: api/Palavras
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Palavra>> PostPalavra(Palavra palavra)
+        public async Task<ActionResult<PalavraDto>> PostPalavra(PalavraDto palavra)
         {
-            _context.Palavras.Add(palavra);
-            await _context.SaveChangesAsync();
+            palavra = await service.Save(palavra);
 
-            return CreatedAtAction("GetPalavra", new { id = palavra.ID }, palavra);
+            return Created("PostPalavra", palavra);
         }
 
         // DELETE: api/Palavras/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePalavra(int id)
+        [HttpDelete("{palavra}")]
+        public async Task<IActionResult> DeletePalavra(string palavra)
         {
-            var palavra = await _context.Palavras.FindAsync(id);
-            if (palavra == null)
-            {
-                return NotFound();
-            }
-
-            _context.Palavras.Remove(palavra);
-            await _context.SaveChangesAsync();
+            await service.DeleteByValor(palavra);
 
             return NoContent();
-        }
-
-        private bool PalavraExists(int id)
-        {
-            return _context.Palavras.Any(e => e.ID == id);
         }
     }
 }

@@ -8,5 +8,6 @@ namespace ProjetoIntegrador.Api.Config
         string GetPass();
         string GetDatabase();
         string GetConnectionString();
+        bool Fail { get; }
     }
 }

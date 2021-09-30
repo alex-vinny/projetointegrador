@@ -9,6 +9,8 @@ namespace ProjetoIntegrador.Api.Config
             this.connection = connection;
         }
 
+        public bool Fail => string.IsNullOrEmpty(connection);
+        
         public string GetUser()
         {
             return connection;

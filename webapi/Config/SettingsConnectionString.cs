@@ -11,6 +11,8 @@ namespace ProjetoIntegrador.Api.Config
             this.configuration = configuration;
         }
 
+        public DatabaseType TypeOf => DatabaseType.AppSettings;
+
         public IStringParser GetParser()
         {
             string s = configuration.GetConnectionString(Constants.DATABASE_SETT);

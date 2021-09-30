@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Data;
-using ProjetoIntegrador.Api.Dto;
+using ProjetoIntegrador.Api.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BaseRequest = ProjetoIntegrador.Api.Dtos.RequestDto;
+using Request = ProjetoIntegrador.Api.Dtos.CategoriaRequestDto;
+using Response = ProjetoIntegrador.Api.Dtos.CategoriaResponseDto;
+using ListResponse = ProjetoIntegrador.Api.Dtos.CategoriaItensResponseDto;
 
 namespace ProjetoIntegrador.Api.Services
 {
-    public class CategoriaService : ICategoriaService
+    public class CategoriaService : Service, ICategoriaService
     {
         protected readonly BancoContext _context;
 
@@ -16,70 +21,96 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<CategoriaDto>> GetAll()
+        public async Task<ListResponse> GetAll()
         {
-            return await GetAll(Dto.Dto.DefaultPagination);
+            return await GetAll(BaseRequest.DefaultPagination);
         }
 
-        public async Task<IEnumerable<CategoriaDto>> GetAll(Dto.Dto dto)
+        private async Task<ListResponse> GetAll(BaseRequest dto)
         {
-            var categorias = _context.Categorias
-                .OrderBy(c => c.ID)
-                .Skip(dto.Skip)
-                .Take(dto.Take)
-                .Select(c => c.ToDto());
+            var response = new CategoriaItensResponseDto();
 
-            return await categorias.ToListAsync();            
+            try
+            {
+                var categorias = _context.Categorias
+                .OrderBy(c => c.ID)
+                .Skip(dto.Skip.Value)
+                .Take(dto.Take.Value)
+                .Select(c => c.MakeDto());
+
+                response.Categorias = await categorias.ToListAsync();               
+            }
+            catch (Exception ex)
+            {
+                return Exception<ListResponse>(ex);
+            }
+
+            if(!response.Categorias.Any())
+            {
+                return Null<ListResponse>("Nenhuma categoria cadastrada.");
+            }
+
+            return response;
         }
         
-        public async Task<CategoriaDto> Get(int id)
+        public async Task<Response> Get(int id)
         {
-            var usuario = await _context.Categorias.FindAsync(id);
-            if (usuario != null)
-                return usuario.ToDto();
-
-            return null;
+            try
+            {
+                var categoria = await _context.Categorias.FindAsync(id);
+                if (categoria != null)
+                {
+                    return categoria.MakeResponse();
+                }
+                else
+                {
+                    return Null<Response>($"Id Categoria: {id} não localizado.");
+                }
+            }
+            catch(Exception ex)
+            {
+                return Exception<Response>(ex);
+            }
         }
 
-        public async Task<CategoriaDto> Update(int id, CategoriaDto categoria)
+        
+
+        public async Task<Response> Save(Request request)
         {
-            if (!Exists(id))
+            var response = new Response();
+            Models.Categoria data = null;
+
+            try
             {
-                return null;
+                data = await _context.Categorias
+                    .Where(c => c.Descricao.Equals(request.Categoria, StringComparison.InvariantCultureIgnoreCase))
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                response.AddError(ex.Message, ErrorTypes.BadRequest);
             }
 
-            _context.Entry(categoria).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            if (data != null)
+                return data.MakeResponse();
 
-            return categoria;
-        }
+            var dto = new CategoriaDto(request);
+            var model = dto.ToModel();
 
-        public async Task<CategoriaDto> Save(CategoriaDto categoria)
-        {
-            var model = categoria.ToModel();
-            _context.Categorias.Add(model);
-            await _context.SaveChangesAsync();
-
-            return model.ToDto();
-        }
-
-        public async Task<CategoriaDto> Delete(int id)
-        {
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria == null)
+            try
             {
-                return null;
+                _context.Categorias.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                response.AddError(ex.Message, ErrorTypes.BadRequest);
             }
 
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
+            if (response.Erros != null)
+                return response;
 
-            return categoria.ToDto();
-        }
-
-        private bool Exists(int id)
-        {
-            return _context.Categorias.Any(e => e.ID == id);
-        }
+            return model.MakeResponse();
+        }       
     }
 }

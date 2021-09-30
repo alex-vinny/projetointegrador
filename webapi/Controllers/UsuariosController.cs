@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ProjetoIntegrador.Api.Dto;
+using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +28,10 @@ namespace api.Controllers
         }
 
         // GET: api/Usuarios/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UsuarioDto>> GetUsuario(int id)
+        [HttpGet("{email}")]
+        public async Task<ActionResult<UsuarioDto>> GetUsuario(string email)
         {
-            var usuario = await service.Get(id);
+            var usuario = await service.GetByEmail(email);
 
             if (usuario == null)
             {
@@ -42,46 +42,47 @@ namespace api.Controllers
         }
 
         // PUT: api/Usuarios/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, UsuarioDto usuario)
+        [HttpPut("{email}")]
+        public async Task<IActionResult> PutUsuario(string email, UsuarioRequestDto dto)
         {
-            if (id != usuario.Id)
+            if (string.IsNullOrEmpty(email))
             {
                 return BadRequest();
             }
 
-            usuario = await service.Update(id, usuario);
+            var usuario = await service.GetByEmail(email);
 
             if (usuario == null)
             {
                 return NotFound();
             }
+
+            await service.Update(usuario.Id, usuario.UpdateFrom(dto));            
 
             return NoContent();
         }
 
         // POST: api/Usuarios
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<UsuarioDto>> PostUsuario(UsuarioDto usuario)
         {
             usuario = await service.Save(usuario);
 
-            return CreatedAtAction("GetUsuario", new { id = usuario.Id }, usuario);
+            return Created("PostUsuario", usuario);
         }
 
         // DELETE: api/Usuarios/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> DeleteUsuario(string email)
         {
-            var usuario = await service.Get(id);
+            var usuario = await service.GetByEmail(email);
+            
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            usuario = await service.Delete(usuario.Id);
+            await service.Delete(usuario.Id);
 
             return NoContent();
         }

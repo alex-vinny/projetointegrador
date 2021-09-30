@@ -1,4 +1,4 @@
-using ProjetoIntegrador.Api.Dto;
+using ProjetoIntegrador.Api.Dtos;
 using System;
 using System.Collections.Generic;
 
@@ -9,11 +9,14 @@ namespace ProjetoIntegrador.Api.Models
         public int ID { get; set; }
         public string Descricao { get; set; }
 
-        public CategoriaDto ToDto()
-        {
-            return new CategoriaDto
-            {
+        public CategoriaDto MakeDto() => new CategoriaDto(MakeResponse());
 
+        public CategoriaResponseDto MakeResponse()
+        {
+            return new CategoriaResponseDto
+            {
+                Id = ID,
+                Categoria = Descricao
             };
         }
     }

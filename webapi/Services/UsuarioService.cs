@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Data;
-using ProjetoIntegrador.Api.Dto;
+using ProjetoIntegrador.Api.Dtos;
+using ProjetoIntegrador.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ProjetoIntegrador.Api.Services
@@ -18,15 +21,15 @@ namespace ProjetoIntegrador.Api.Services
 
         public async Task<IEnumerable<UsuarioDto>> GetAll()
         {
-            return await GetAll(Dto.Dto.DefaultPagination);
+            return await GetAll(RequestDto.DefaultPagination);
         }
 
-        public async Task<IEnumerable<UsuarioDto>> GetAll(Dto.Dto dto)
+        public async Task<IEnumerable<UsuarioDto>> GetAll(RequestDto dto)
         {
             var usuarios = _context.Usuarios
                 .OrderBy(c => c.ID)
-                .Skip(dto.Skip)
-                .Take(dto.Take)
+                .Skip(dto.Skip.Value)
+                .Take(dto.Take.Value)
                 .Select(c => c.ToDto());
 
             return await usuarios.ToListAsync();            
@@ -41,17 +44,27 @@ namespace ProjetoIntegrador.Api.Services
             return null;
         }
 
-        public async Task<UsuarioDto> Update(int id, UsuarioDto usuario)
+        public async Task<UsuarioDto> GetByEmail(string email)
         {
-            if (!Exists(id))
+            var usuario = await _context.Usuarios
+                            .Where(c => c.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
+                            .FirstOrDefaultAsync();
+            if (usuario != null)
+                return usuario.ToDto();
+
+            return null;
+        }
+
+        public async Task Update(int id, UsuarioDto usuario)
+        {
+            if (Exists(id))
             {
-                return null;
+                var entity = await _context.Usuarios.FindAsync(id);
+                _context.Entry(entity).State = EntityState.Modified;                
+                _context.Usuarios.Update(entity.UpdateFrom(usuario));
+
+                await _context.SaveChangesAsync();
             }
-
-            _context.Entry(usuario).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return usuario;
         }
 
         public async Task<UsuarioDto> Save(UsuarioDto usuario)
@@ -63,18 +76,14 @@ namespace ProjetoIntegrador.Api.Services
             return model.ToDto();
         }
 
-        public async Task<UsuarioDto> Delete(int id)
+        public async Task Delete(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            if (usuario != null)
             {
-                return null;
+                _context.Usuarios.Remove(usuario);
+                await _context.SaveChangesAsync();
             }
-
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-
-            return usuario.ToDto();
         }
 
         private bool Exists(int id)
