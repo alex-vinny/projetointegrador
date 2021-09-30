@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr'
+import { ToastrModule } from 'ngx-toastr';
+import { TooltipModule } from 'ngx-bootstrap/tooltip'
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,7 +32,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       timeOut: 10000,
       positionClass: 'toast-top-full-width',
       progressBar: true
-    })
+    }),
+    TooltipModule.forRoot(),
 
   ],
   providers: [],
