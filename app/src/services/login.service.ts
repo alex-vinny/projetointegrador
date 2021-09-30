@@ -13,8 +13,8 @@ export class LoginService {
     private http: HttpClient,
   ) { }
 
-  getUsuarioByEmail(email: string): Observable<Usuario[]>{
-    return this.http.get<Usuario[]>(this.url + '/Alunos/' + email);
+  getUsuarioByEmail(email: string): Observable<Usuario>{
+    return this.http.get<Usuario>(this.url + '/Alunos/' + email);
   }
 
 }
