@@ -7,11 +7,12 @@ namespace ProjetoIntegrador.Api.Services
 {
     public interface IUsuarioService
     {
-        Task<IEnumerable<UsuarioResponseDto>> GetAll();
-        Task<UsuarioResponseDto> GetByEmail(string email);
-        Task<UsuarioResponseDto> Get(int id);
-        Task<ResponseDto> Update(int id, UsuarioDto request);
-        Task<UsuarioResponseDto> Save(UsuarioDto request);
+        Task<ResponseDto> GetAll();
+        Task<ResponseDto> GetByEmail(string email);
+        Task<ResponseDto> Get(int id);
+        Task<ResponseDto> Update(string email, UsuarioRequestDto request);
+        Task<ResponseDto> Save(UsuarioDto request);
         Task<ResponseDto> Delete(int id);
+        Task<ResponseDto> DeleteByEmail(string email);
     }
 }

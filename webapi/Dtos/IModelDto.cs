@@ -1,6 +1,6 @@
 ﻿namespace ProjetoIntegrador.Api.Dtos
 {
-    public class ModelDto
+    public interface IModelDto
     {
         public int Id { get; set; }
     }

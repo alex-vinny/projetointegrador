@@ -18,6 +18,8 @@ namespace ProjetoIntegrador.Api.Extensions
             else if(connection.TypeOf == DatabaseType.AppSettings)
             {
                 //services.AddDatabaseDeveloperPageExceptionFilter();
+                services.AddDbContext<BancoContext>(options =>
+                        options.UseSqlite(connection.GetConnectionString()));
             }
         }
         public static string GetConnectionString(this IConnectionString service)

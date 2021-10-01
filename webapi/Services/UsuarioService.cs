@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProjetoIntegrador.Api.Services
 {
-    public class UsuarioService : IUsuarioService
+    public class UsuarioService : Service, IUsuarioService
     {
         protected readonly BancoContext _context;
 
@@ -19,64 +19,207 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<UsuarioDto>> GetAll()
+        public async Task<ResponseDto> GetAll()
         {
             return await GetAll(RequestDto.DefaultPagination);
         }
 
-        public async Task<IEnumerable<UsuarioDto>> GetAll(RequestDto dto)
+        public async Task<ResponseDto> GetAll(RequestDto dto)
         {
-            var usuarios = _context.Usuarios
-                .OrderBy(c => c.ID)
-                .Skip(dto.Skip.Value)
-                .Take(dto.Take.Value)
-                .Select(c => c.ToDto());
+            try
+            {
+                var query = _context.Usuarios
+                    .OrderBy(c => c.ID)
+                    .Skip(dto.Skip.Value)
+                    .Take(dto.Take.Value)
+                    .Select(c => c.MakeResponse());
 
-            return await usuarios.ToListAsync();            
+                var usuarios = await query.ToListAsync();
+
+                if (!usuarios.Any())
+                    Null("Nenhum usuário cadastrado.");
+
+                return new ResponseDto
+                {
+                    { "usuarios", usuarios }
+                };
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
         }
         
-        public async Task<UsuarioDto> Get(int id)
+        public async Task<ResponseDto> Get(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
-                return usuario.ToDto();
+            try
+            {
+                var model = await GetUsuario(id);
+                if (model == null)
+                    return Null($"Usuário com o ID: {id} não localizado.");
 
-            return null;
+                return new ResponseDto
+                {
+                    { "usuario", model.MakeResponse() }
+                };
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
         }
 
-        public async Task<UsuarioDto> GetByEmail(string email)
+        private async Task<Usuario> GetUsuario(int id)
         {
-            var usuario = await _context.Usuarios
-                            .Where(c => c.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
+            return await _context.Usuarios.FindAsync(id);            
+        }
+
+        public async Task<ResponseDto> GetByEmail(string email)
+        {
+            try
+            {
+                var model = await GetUsuarioByEmail(email);
+                if (model == null)
+                    return Null($"Usuário com o e-mail: {email} não cadastrado.");
+
+                return new ResponseDto
+                {
+                    { "usuario", model.MakeResponse() }
+                };
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
+        private async Task<Usuario> GetUsuarioByEmail(string email)
+        {
+            return await _context.Usuarios
+                            .Where(c => c.Email.Equals(email))
                             .FirstOrDefaultAsync();
-            if (usuario != null)
-                return usuario.ToDto();
-
-            return null;
         }
 
-        public async Task Update(int id, UsuarioDto usuario)
+        public async Task<ResponseDto> Update(string email, UsuarioRequestDto request)
+        {
+            try
+            {
+                var model = await GetUsuarioByEmail(email);
+                if (model == null)
+                    return Null($"Usuário com o e-mail: {email} não cadastrado.");
+                
+                model.Nome = string.IsNullOrEmpty(request.Nome) ? model.Nome : request.Nome;
+                model.DicaSecreta = string.IsNullOrEmpty(request.DicaSecreta) ? model.DicaSecreta : request.DicaSecreta;
+                model.PalavraSecreta = string.IsNullOrEmpty(request.PalavraSecreta) ? model.PalavraSecreta : request.PalavraSecreta;
+                model.Senha = string.IsNullOrEmpty(request.Senha) ? model.Senha : request.Senha;
+
+                await Update(model.ID, model);
+
+                return new ResponseDto
+                {
+                    { "usuario", model.MakeResponse() }
+                };
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
+        private async Task Update(int id, Usuario model)
         {
             if (Exists(id))
             {
                 var entity = await _context.Usuarios.FindAsync(id);
-                _context.Entry(entity).State = EntityState.Modified;                
-                _context.Usuarios.Update(entity.UpdateFrom(usuario));
+                _context.Entry(entity).State = EntityState.Modified;
+                _context.Usuarios.Update(model);
 
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<UsuarioDto> Save(UsuarioDto usuario)
+        public async Task<ResponseDto> Save(UsuarioDto request)
         {
-            var model = usuario.ToModel();
+            try
+            {
+                var model = await GetUsuarioByEmail(request.Email);
+                if (model != null)
+                    return ErrorResponse(ErrorTypes.NotAllowed, $"Usuário com o e-mail: {request.Email} já cadastrado.");
+
+                model = new Usuario();
+
+                if (string.IsNullOrEmpty(request.Email))
+                    return Null("Obrigatório informar o e-mail.");
+
+                if (string.IsNullOrEmpty(request.Nome))
+                    return Null("Obrigatório informar o nome.");
+
+                if (string.IsNullOrEmpty(request.Senha))
+                    return Null("Obrigatório informar uma senha.");
+
+                model.Email = request.Email;
+                model.Nome = request.Nome;
+                model.DicaSecreta = request.DicaSecreta;
+                model.PalavraSecreta = request.PalavraSecreta;
+                model.Senha = request.Senha;
+                model.Perfil = request.Perfil;
+
+                await Save(model);
+
+                return new ResponseDto
+                {
+                    { "usuario", model.MakeResponse() }
+                };
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
+        private async Task<Usuario> Save(Usuario model)
+        {
             _context.Usuarios.Add(model);
             await _context.SaveChangesAsync();
 
-            return model.ToDto();
+            return model;
         }
 
-        public async Task Delete(int id)
+        public async Task<ResponseDto> Delete(int id)
+        {
+            try
+            {
+                var model = await GetUsuario(id);
+                if (model == null)
+                    return Null($"não encontrado.");
+
+                await DeleteUsuario(id);
+                return ResponseDto.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
+        public async Task<ResponseDto> DeleteByEmail(string email)
+        {
+            try
+            {
+                var model = await GetUsuarioByEmail(email);
+                if (model == null)
+                    return Null($"não encontrado.");
+
+                await DeleteUsuario(model.ID);
+                return ResponseDto.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
+        private async Task DeleteUsuario(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario != null)

@@ -2,20 +2,15 @@ using ProjetoIntegrador.Api.Models;
 
 namespace ProjetoIntegrador.Api.Dtos
 {
-    public class CategoriaDto : ModelDto
+    public class CategoriaDto : IModelDto
     {
-        public CategoriaDto(CategoriaRequestDto request)
+        public CategoriaDto(string categoria)
         {
-            Categoria = request.Categoria;
-        }
-
-        public CategoriaDto(CategoriaResponseDto response)
-        {
-            Categoria = response.Categoria;
-            Id = response.Id;
+            Categoria = categoria;
         }
 
         public string Categoria { get; set; }
+        public int Id { get; set; }
 
         public Categoria ToModel()
         {

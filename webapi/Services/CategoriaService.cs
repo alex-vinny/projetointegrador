@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BaseRequest = ProjetoIntegrador.Api.Dtos.RequestDto;
-using Request = ProjetoIntegrador.Api.Dtos.CategoriaRequestDto;
-using Response = ProjetoIntegrador.Api.Dtos.CategoriaResponseDto;
-using ListResponse = ProjetoIntegrador.Api.Dtos.CategoriaItensResponseDto;
 
 namespace ProjetoIntegrador.Api.Services
 {
@@ -21,39 +18,38 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<ListResponse> GetAll()
+        public async Task<ResponseDto> GetAll()
         {
             return await GetAll(BaseRequest.DefaultPagination);
         }
 
-        private async Task<ListResponse> GetAll(BaseRequest dto)
+        private async Task<ResponseDto> GetAll(BaseRequest dto)
         {
-            var response = new CategoriaItensResponseDto();
-
             try
             {
-                var categorias = _context.Categorias
-                .OrderBy(c => c.ID)
-                .Skip(dto.Skip.Value)
-                .Take(dto.Take.Value)
-                .Select(c => c.MakeDto());
+                var query = _context.Categorias
+                    .OrderBy(c => c.ID)
+                    .Skip(dto.Skip.Value)
+                    .Take(dto.Take.Value)
+                    .Select(c => c.MakeResponse());
 
-                response.Categorias = await categorias.ToListAsync();               
+                var categorias = await query.ToListAsync();
+
+                if (!categorias.Any())
+                    return Null("Nenhuma categoria cadastrada.");
+
+                return new ResponseDto
+                {
+                    { "categorias", categorias }
+                };
             }
             catch (Exception ex)
             {
-                return Exception<ListResponse>(ex);
+                return Exception(ex);
             }
-
-            if(!response.Categorias.Any())
-            {
-                return Null<ListResponse>("Nenhuma categoria cadastrada.");
-            }
-
-            return response;
         }
         
-        public async Task<Response> Get(int id)
+        public async Task<ResponseDto> Get(int id)
         {
             try
             {
@@ -64,38 +60,34 @@ namespace ProjetoIntegrador.Api.Services
                 }
                 else
                 {
-                    return Null<Response>($"Id Categoria: {id} não localizado.");
+                    return Null($"Id Categoria: {id} não localizado.");
                 }
             }
             catch(Exception ex)
             {
-                return Exception<Response>(ex);
+                return Exception(ex);
             }
         }
 
-        
-
-        public async Task<Response> Save(Request request)
+        public async Task<ResponseDto> Save(CategoriaDto request)
         {
-            var response = new Response();
             Models.Categoria data = null;
 
             try
             {
                 data = await _context.Categorias
-                    .Where(c => c.Descricao.Equals(request.Categoria, StringComparison.InvariantCultureIgnoreCase))
+                    .Where(c => c.Descricao.Equals(request.Categoria))
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                response.AddError(ex.Message, ErrorTypes.BadRequest);
+                return Exception(ex);
             }
 
             if (data != null)
                 return data.MakeResponse();
-
-            var dto = new CategoriaDto(request);
-            var model = dto.ToModel();
+            
+            var model = request.ToModel();
 
             try
             {
@@ -104,11 +96,8 @@ namespace ProjetoIntegrador.Api.Services
             }
             catch (Exception ex)
             {
-                response.AddError(ex.Message, ErrorTypes.BadRequest);
+                return Exception(ex);
             }
-
-            if (response.Erros != null)
-                return response;
 
             return model.MakeResponse();
         }       

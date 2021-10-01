@@ -9,14 +9,12 @@ namespace ProjetoIntegrador.Api.Models
         public int ID { get; set; }
         public string Descricao { get; set; }
 
-        public CategoriaDto MakeDto() => new CategoriaDto(MakeResponse());
-
-        public CategoriaResponseDto MakeResponse()
+        public ResponseDto MakeResponse()
         {
-            return new CategoriaResponseDto
+            return new ResponseDto
             {
-                Id = ID,
-                Categoria = Descricao
+                { "id", ID },
+                { "descricao", Descricao }
             };
         }
     }

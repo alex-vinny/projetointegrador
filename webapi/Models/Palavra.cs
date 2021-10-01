@@ -12,38 +12,16 @@ namespace ProjetoIntegrador.Api.Models
         public int? SerieEscolar { get; set; }
         public Categoria Categoria { get; set; }
 
-        public PalavraDto ToDto()
+        public ResponseDto MakeResponse()
         {
-            return new PalavraDto
+            return new ResponseDto
             {
-                Id = ID,
-                CategoriaId = Categoria?.ID,
-                Categoria = Categoria?.Descricao,
-                Palavra = Valor,
-                DicaPalavra = Dica,
-                SerieEscolar = SerieEscolar
+                { "id", ID },
+                { "palavra", Valor },
+                { "dica", Valor },
+                { "serieEscolar", SerieEscolar },
+                { "categoria", Categoria.Descricao },
             };
-        }
-
-        public Palavra UpdateFrom(PalavraDto palavra)
-        {
-            Valor = palavra.Palavra;
-            Dica = palavra.DicaPalavra;
-            SerieEscolar = palavra.SerieEscolar;
-            
-            if (palavra.CategoriaId.HasValue &&
-                !Categoria.ID.Equals(palavra.CategoriaId.Value))
-            {   
-                Categoria = new Categoria
-                {
-                    ID = palavra.CategoriaId.Value
-                };
-
-                if (Categoria.ID == 0)
-                    Categoria.Descricao = palavra.Categoria;
-            }
-
-            return this;
         }
     }
 }

@@ -1,26 +1,49 @@
 ﻿using ProjetoIntegrador.Api.Dtos;
 using System;
+using System.Linq;
 
 namespace ProjetoIntegrador.Api.Services
 {
     public abstract class Service
     {
-        protected static T Null<T>(string msg)
-            where T : ResponseDto, new()
+        protected ResponseDto Null(string msg)
         {
-            var resp = new T();
-            resp.AddError(msg, ErrorTypes.Null);
-
-            return resp;
+            return MakeErrorResponse(ErrorTypes.Null, msg);
         }
 
-        protected T Exception<T>(Exception ex)
-            where T : ResponseDto, new()
+        protected ResponseDto Exception(Exception ex)
         {
-            var resp = new T();
-            resp.AddError(ex.Message, ErrorTypes.BadRequest);
+            return MakeErrorResponse(ErrorTypes.BadRequest, ex.Message);
+        }
 
-            return resp;
+        protected ResponseDto Error(string msg)
+        {
+            return MakeErrorResponse(ErrorTypes.BadRequest, msg);
+        }
+
+        protected ResponseDto ErrorResponse(ErrorTypes type, params string[] messages)
+
+        {
+            return MakeErrorResponse(type, messages);
+        }
+        
+        private ResponseDto MakeErrorResponse(ErrorTypes type, params string[] messages)
+        {
+            var erro = new ErrorDto();
+            erro.Codigo = type;
+            
+            if(messages.Any())
+            {
+                foreach (var message in messages)
+                {
+                    erro.Mensagens.Add(message);
+                }
+            }
+
+            return new ResponseDto
+            {
+                { "erro", erro }
+            };
         }
     }
 }

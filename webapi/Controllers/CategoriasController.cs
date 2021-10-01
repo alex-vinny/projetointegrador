@@ -22,18 +22,16 @@ namespace api.Controllers
 
         // GET: api/Categorias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoriaDto>>> GetCategorias()
+        public async Task<ActionResult<ResponseDto>> GetCategorias()
         {
-            var categorias = await service.GetAll();
-
-            return categorias.ToList();
+            return await service.GetAll();
         }
 
         // POST: api/Categorias        
         [HttpPost]
-        public async Task<ActionResult<CategoriaDto>> PostCategoria(string categoria)
+        public async Task<ActionResult<ResponseDto>> PostCategoria(string categoria)
         {
-            var categoriaDto = await service.Save(new CategoriaDto { Categoria = categoria});
+            var categoriaDto = await service.Save(new CategoriaDto(categoria));
 
             return Created("PostCategoria", categoriaDto);
         }

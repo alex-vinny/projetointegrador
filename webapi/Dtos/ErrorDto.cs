@@ -8,17 +8,18 @@ namespace ProjetoIntegrador.Api.Dtos
         Null,
         NotFound,
         NoContent,
-        BadRequest
+        BadRequest,
+        NotAllowed
     }
 
     public class ErrorDto
     {
         public ErrorDto()
         {
-            Code = ErrorTypes.Unknown;
-            Messages = new List<string>();
+            Codigo = ErrorTypes.Unknown;
+            Mensagens = new List<string>();
         }
-        public ErrorTypes Code { get; set; }
-        public List<string> Messages { get; set; }
+        public ErrorTypes Codigo { get; set; }
+        public List<string> Mensagens { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Models;
 using ProjetoIntegrador.Api.Services;
+using ProjetoIntegrador.Api.Extensions;
 
 namespace api.Controllers
 {
@@ -26,46 +27,37 @@ namespace api.Controllers
 
         // GET: api/Palavras/m/10/1
         [HttpGet("{categoria}/{qtd}/{serie}")]
-        public async Task<ActionResult<IEnumerable<PalavraDto>>> GetPalavras(string categoria, int qtd, string serie)
+        public async Task<ActionResult<ResponseDto>> GetPalavras(string categoria, int qtd, int serie = 0)
         {
-            var palavras = await service.GetAll(
-                new PalavraDto 
-                { 
-                    Categoria = categoria, 
-                    Take = (qtd <= 0? Constants.QTD_PALAVRAS : qtd)
-                });
+            var dto = new PalavraDto
+            {
+                Categoria = categoria,
+                QtdItens = (qtd <= 0 ? Constants.QTD_PALAVRAS : qtd),
+                SerieEscolar = serie
+            };
 
-            if(palavras.Any())
-                return palavras.ToList();
-
-            return NotFound();
+            return this.SendResponse(await service.GetAll(dto));
         }
 
-        // PUT: api/Categorias/
+        // PUT: api/Palavras/
         [HttpPut("{palavra}/{categoria}")]
         public async Task<IActionResult> PutPalavra(string palavra, string categoria)
         {
-            await service.UpdateCategoria(palavra, categoria);
-
-            return NoContent();
+            return this.SendResponse(await service.UpdateCategoria(palavra, categoria));
         }
 
         // POST: api/Palavras
         [HttpPost]
-        public async Task<ActionResult<PalavraDto>> PostPalavra(PalavraDto palavra)
+        public async Task<ActionResult<PalavraDto>> PostPalavra(PalavraRequestDto request)
         {
-            palavra = await service.Save(palavra);
-
-            return Created("PostPalavra", palavra);
+            return this.SendResponse(await service.Save(request));
         }
 
         // DELETE: api/Palavras/5
         [HttpDelete("{palavra}")]
         public async Task<IActionResult> DeletePalavra(string palavra)
         {
-            await service.DeleteByValor(palavra);
-
-            return NoContent();
+            return this.SendResponse(await service.DeleteByValor(palavra));
         }
     }
 }

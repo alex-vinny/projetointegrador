@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using ProjetoIntegrador.Api.Config;
 using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Services;
 
 namespace ProjetoIntegrador.Api
 {
@@ -27,6 +28,11 @@ namespace ProjetoIntegrador.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
             });
+
+            // Injeção de dependências das Services
+            services.AddScoped<ICategoriaService, CategoriaService>();
+            services.AddScoped<IPalavraService, PalavraService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

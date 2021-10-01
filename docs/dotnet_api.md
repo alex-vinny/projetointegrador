@@ -54,3 +54,7 @@ https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model?view
 
 instalar o EF para postgre pois é o padrão do heroku
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+
+para o sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite.Design
