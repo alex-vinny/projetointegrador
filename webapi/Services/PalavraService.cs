@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Api.Config;
 using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Dtos;
+using ProjetoIntegrador.Api.Extensions;
 using ProjetoIntegrador.Api.Models;
 using System;
 using System.Collections.Generic;
@@ -34,11 +36,12 @@ namespace ProjetoIntegrador.Api.Services
                 return Exception(ex);
             }
         }
-
+        
         private async Task<Palavra> GetPalavraByValor(string valor)
         {
+            valor = valor.RemoverAcentos();
             return await _context.Palavras
-                    .Where(c => c.Valor.Equals(valor))
+                    .Where(c => c.ValorSemAcento.Equals(valor))
                     .FirstOrDefaultAsync();
         }
 
@@ -50,17 +53,28 @@ namespace ProjetoIntegrador.Api.Services
 
                 if (!string.IsNullOrEmpty(request.Categoria))
                 {
-                    query = query
+                    request.Categoria = request.Categoria.RemoverAcentos(true);
+                    query = query                            
                             .Include(c => c.Categoria)
-                            .Where(c => c.Categoria.Descricao.Equals(request.Categoria));
+                            .Where(c => c.Categoria.DescricaoSemAcento.Equals(request.Categoria));
 
                     if (request.SerieEscolar > 0)                    
                         query = query.Where(c => c.SerieEscolar == request.SerieEscolar);                    
                 }
 
-                var resultado = query.OrderBy(c => c.ID)
-                                    .Take(request.QtdItens)
-                                    .Select(c => c.MakeResponse());
+                query = query.Take(Constants.TAMANHO_PAGINA);
+
+                bool ordenarAcendent = (new Random().Next(0, 1) == 1 ? true : false);
+
+                if (ordenarAcendent)
+                    query = query.OrderBy(c => c.ValorSemAcento);
+                else
+                    query = query.OrderBy(c => c.ValorSemAcento);
+
+                var resultado = query
+                                    .Select(c => c.MakeResponse())
+                                    //.Distinct(new PalavraComparador())
+                                    .Take(request.QtdItens);
 
                 var palavras = await resultado.ToListAsync();
 
@@ -134,7 +148,9 @@ namespace ProjetoIntegrador.Api.Services
                     return Null($"Palavra não localizada para atualização: {request.Palavra}");
 
                 palavra.Dica = string.IsNullOrEmpty(request.DicaPalavra) ? palavra.Dica : request.DicaPalavra;
+                palavra.DicaSemAcento = palavra.Dica.RemoverAcentos();
                 palavra.Valor = string.IsNullOrEmpty(request.Palavra) ? palavra.Valor : request.Palavra;
+                palavra.ValorSemAcento = palavra.Valor.RemoverAcentos();
                 palavra.SerieEscolar = request.SerieEscolar > 0 ? request.SerieEscolar : palavra.SerieEscolar;
 
                 await UpdatePalavra(palavra.ID, palavra);
@@ -190,7 +206,9 @@ namespace ProjetoIntegrador.Api.Services
                 }
 
                 palavra.Dica = request.DicaPalavra;
+                palavra.DicaSemAcento = request.DicaPalavra.RemoverAcentos();
                 palavra.Valor = request.Palavra;
+                palavra.ValorSemAcento = request.Palavra.RemoverAcentos();
                 palavra.SerieEscolar = request.SerieEscolar;
 
                 var categoria = await GetCategoria(request.Categoria);
@@ -203,7 +221,7 @@ namespace ProjetoIntegrador.Api.Services
                 {
                     palavra.Categoria = new Categoria
                     {
-                        Descricao = request.Categoria
+                        Descricao = request.Categoria.RemoverAcentos(true)
                     };
                 }
 
@@ -220,8 +238,9 @@ namespace ProjetoIntegrador.Api.Services
 
         private async Task<Categoria> GetCategoria(string descricao)
         {
+            descricao = descricao.RemoverAcentos(true);
             return await _context.Categorias
-                .Where(c => c.Descricao.Equals(descricao))
+                .Where(c => c.DescricaoSemAcento.Equals(descricao))
                 .FirstOrDefaultAsync();
         }
 

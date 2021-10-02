@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Dtos;
+using ProjetoIntegrador.Api.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,10 +74,16 @@ namespace ProjetoIntegrador.Api.Services
         {
             Models.Categoria data = null;
 
+            if (string.IsNullOrEmpty(request.Categoria))
+            {
+                return Null("Obrigatório informar valor válido como categoria.");
+            }
+
             try
             {
+                request.Categoria = request.Categoria.RemoverAcentos(true);
                 data = await _context.Categorias
-                    .Where(c => c.Descricao.Equals(request.Categoria))
+                    .Where(c => c.DescricaoSemAcento.Equals(request.Categoria))
                     .FirstOrDefaultAsync();
             }
             catch (Exception ex)
@@ -86,7 +93,7 @@ namespace ProjetoIntegrador.Api.Services
 
             if (data != null)
                 return data.MakeResponse();
-            
+
             var model = request.ToModel();
 
             try
@@ -100,6 +107,6 @@ namespace ProjetoIntegrador.Api.Services
             }
 
             return model.MakeResponse();
-        }       
+        }     
     }
 }

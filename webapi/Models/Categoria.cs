@@ -8,13 +8,15 @@ namespace ProjetoIntegrador.Api.Models
     {
         public int ID { get; set; }
         public string Descricao { get; set; }
+        public string DescricaoSemAcento { get; set; }
 
         public ResponseDto MakeResponse()
         {
             return new ResponseDto
             {
                 { "id", ID },
-                { "descricao", Descricao }
+                { "descricao", Descricao },
+                { "semAcentos", Descricao }
             };
         }
     }

@@ -1,3 +1,4 @@
+using ProjetoIntegrador.Api.Extensions;
 using ProjetoIntegrador.Api.Models;
 
 namespace ProjetoIntegrador.Api.Dtos
@@ -16,7 +17,8 @@ namespace ProjetoIntegrador.Api.Dtos
         {
             return new Categoria
             {
-                Descricao = Categoria
+                Descricao = Categoria,
+                DescricaoSemAcento = Categoria.RemoverAcentos(true)
             };
         }
     }

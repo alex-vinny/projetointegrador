@@ -24,11 +24,11 @@ namespace ProjetoIntegrador.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Categoria>()
-                .HasIndex(p => p.Descricao)
+                .HasIndex(p => p.DescricaoSemAcento)
                 .IsUnique(true);
 
              modelBuilder.Entity<Palavra>()
-                .HasIndex(p => p.Valor)
+                .HasIndex(p => new { p.ValorSemAcento, p.DicaSemAcento })
                 .IsUnique(true);
             
             modelBuilder
