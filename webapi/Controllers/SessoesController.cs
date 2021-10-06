@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProjetoIntegrador.Api.Data;
-using ProjetoIntegrador.Api.Models;
+using ProjetoIntegrador.Api.Dtos;
+using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Services;
+using System.Threading.Tasks;
 
 namespace api.Controllers
 {
@@ -14,95 +10,25 @@ namespace api.Controllers
     [ApiController]
     public class SessoesController : ControllerBase
     {
-        private readonly BancoContext _context;
+        private readonly ISessaoService service;
 
-        public SessoesController(BancoContext context)
+        public SessoesController(ISessaoService service)
         {
-            _context = context;
+            this.service = service;
         }
 
-        // GET: api/Sessoes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Sessao>>> GetSessao()
+        // PUT: api/Sessoes/5        
+        [HttpPut("{email}")]
+        public async Task<IActionResult> PutSessao(string email, SessaoRequestDto sessao)
         {
-            return await _context.Sessoes.ToListAsync();
-        }
-
-        // GET: api/Sessoes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Sessao>> GetSessao(int id)
-        {
-            var sessao = await _context.Sessoes.FindAsync(id);
-
-            if (sessao == null)
-            {
-                return NotFound();
-            }
-
-            return sessao;
-        }
-
-        // PUT: api/Sessoes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSessao(int id, Sessao sessao)
-        {
-            if (id != sessao.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(sessao).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SessaoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return this.SendResponse(await service.Update(email, sessao));
         }
 
         // POST: api/Sessoes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Sessao>> PostSessao(Sessao sessao)
+        [HttpPost("{email}")]
+        public async Task<ActionResult<ResponseDto>> PostSessao(string email, SessaoDto sessao)
         {
-            _context.Sessoes.Add(sessao);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSessao", new { id = sessao.ID }, sessao);
-        }
-
-        // DELETE: api/Sessoes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSessao(int id)
-        {
-            var sessao = await _context.Sessoes.FindAsync(id);
-            if (sessao == null)
-            {
-                return NotFound();
-            }
-
-            _context.Sessoes.Remove(sessao);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool SessaoExists(int id)
-        {
-            return _context.Sessoes.Any(e => e.ID == id);
+            return this.SendResponse(await service.Save(email, sessao));
         }
     }
 }

@@ -33,6 +33,7 @@ namespace ProjetoIntegrador.Api
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<IPalavraService, PalavraService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<ISessaoService, SessaoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
