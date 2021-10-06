@@ -71,7 +71,7 @@ namespace ProjetoIntegrador.Api.Services
 
         private async Task<Usuario> GetUsuario(int id)
         {
-            return await _context.Usuarios.FindAsync(id);            
+            return await _context.Usuarios.FindAsync(id);
         }
 
         public async Task<ResponseDto> GetByEmail(string email)
