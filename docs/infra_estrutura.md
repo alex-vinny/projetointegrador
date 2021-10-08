@@ -39,6 +39,6 @@ Outro exemplo que funcionou:
 `$ docker run --rm -d -p 5000:80 --link db --name api webapi`
 * Testar pelo navegador: Acessar [localhost](http://localhost:5000/swagger/index.html).
 * Comandos de buld ***Javascript***
-> `$docker build -t angularapp .`
-`$docker run -d --rm -p 8080:80 --name myapp angularapp`
+> `$ docker build -t angularapp .`
+`$ docker run -d --rm -p 8080:80 -e PORT=80 --name myapp angularapp`
 * Testar pelo navegador: Acessar [localhost](http://localhost:8080/)
