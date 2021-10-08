@@ -24,7 +24,7 @@ namespace ProjetoIntegrador.Api.Models
                 { "dica", Dica },
                 { "dicaSemAcento", DicaSemAcento },
                 { "serieEscolar", SerieEscolar },
-                { "categoria", Categoria.Descricao },
+                { "categoria", Categoria.Descricao }
             };
         }
     }

@@ -16,7 +16,7 @@ namespace ProjetoIntegrador.Api.Models
             {
                 { "id", ID },
                 { "descricao", Descricao },
-                { "semAcentos", Descricao }
+                { "semAcentos", string.IsNullOrEmpty(DescricaoSemAcento) ? Descricao : DescricaoSemAcento }
             };
         }
     }

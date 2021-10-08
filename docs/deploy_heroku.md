@@ -19,12 +19,12 @@
 > `heroku container:login`
 
 `#` _Para o upload da imagem ao registry do **Heroku**:_
-> `heroku container:push web your_image`
+> `heroku container:push web -a {app-name}`
 
 O aplicativo aparecerá como: `https://{project-name}.herokuapp.com`
 
 `#` _Comando para Release com Deploy_
-> `heroku container:release web -a your_image`
+> `heroku container:release web -a {app-name}`
 
 `*` _A __API__ estará api publicada em:_
 [URI 1](https://{project-name}.herokuapp.com/swagger/index.html) ou [URI 2](https://{project-name}.herokuapp.com/index.html).

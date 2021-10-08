@@ -22,6 +22,6 @@ RUN dotnet publish "webapi.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "webapi.dll"]
+#ENTRYPOINT ["dotnet", "webapi.dll"]
 ## descomentar para publicar no heroku
-#CMD ASPNETCORE_URLS=http://*:$PORT dotnet webapi.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet webapi.dll
