@@ -1,18 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ProjetoIntegrador.Api.Models;
+using Microsoft.OpenApi.Models;
+using ProjetoIntegrador.Api.Config;
 using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Services;
 
 namespace ProjetoIntegrador.Api
 {
@@ -27,30 +20,20 @@ namespace ProjetoIntegrador.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            //services.AddDbContext<BancoContext>(opt => opt.UseInMemoryDatabase("Cruzada"));
-            services.AddDbContext<BancoContext>(options => 
-                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-                options.UseNpgsql(services.GetConnectionString()));
+            IConnectionString serviceConnection = new ConnectionStringStrategy(Configuration);
 
-            //services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddControllers();
+            serviceConnection.ConfigureDatabase(services);            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
             });
 
-            /*
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = 
-                    ForwardedHeaders.XForwardedFor | 
-                    ForwardedHeaders.XForwardedProto;
-
-                options.KnownNetworks.Clear();
-                options.KnownProxies.Clear();
-            });
-            */
+            // Injeção de dependências das Services
+            services.AddScoped<ICategoriaService, CategoriaService>();
+            services.AddScoped<IPalavraService, PalavraService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<ISessaoService, SessaoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

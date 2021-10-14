@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+    api:
+        build: /api
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+    web:
+      build: /app
+      ports:
+        - "4200:80"
+      dependes_on: api
+    db:
+        image: "mcr.microsoft.com/mssql/server"
+        environment:
+            SA_PASSWORD: "Your_password123"
+            ACCEPT_EULA: "Y"

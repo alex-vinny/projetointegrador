@@ -1,20 +1,19 @@
-using System;
-using System.Collections.Generic;
-
 namespace ProjetoIntegrador.Api.Config
 {
-    public class PostgreStringParser : IConnectionStringParser
+    public class PgStringParser : IStringParser
     {
-        string urlDatabase;
+        string connection;
 
-        public PostgreStringParser(string urlDatabase)
+        public PgStringParser(string connection)
         {
-            this.urlDatabase = urlDatabase;
+            this.connection = connection;
         }
+
+        public bool Fail => string.IsNullOrEmpty(connection);
 
         private string GetLeft()
         {
-            return urlDatabase.Split("@")[0].Replace("postgres://", "");
+            return connection.Split("@")[0].Replace("postgres://", "");
         }
 
         public string GetUser()
@@ -29,7 +28,7 @@ namespace ProjetoIntegrador.Api.Config
 
         private string GetRight()
         {
-            return urlDatabase.Split("@")[1];
+            return connection.Split("@")[1];
         }
 
         public string GetHost()

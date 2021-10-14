@@ -12,7 +12,7 @@ namespace ProjetoIntegrador.Api.Models
     public class CruzadaItem
     {
         public int ID { get; set; }
-        public Palavra Palavra {get; set; }        
+        public Palavra Palavra {get; set; }
         public int PosicaoX { get; set; }
         public int PosicaoY { get; set; }
         public Orientacao Orientacao { get; set; }

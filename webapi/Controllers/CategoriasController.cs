@@ -1,11 +1,11 @@
-using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProjetoIntegrador.Api.Dtos;
+using ProjetoIntegrador.Api.Models;
+using ProjetoIntegrador.Api.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProjetoIntegrador.Api.Models;
 
 namespace api.Controllers
 {
@@ -13,95 +13,27 @@ namespace api.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly BancoContext _context;
+        private readonly ICategoriaService service;
 
-        public CategoriasController(BancoContext context)
+        public CategoriasController(ICategoriaService context)
         {
-            _context = context;
+            service = context;
         }
 
         // GET: api/Categorias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
+        public async Task<ActionResult<ResponseDto>> GetCategorias()
         {
-            return await _context.Categorias.ToListAsync();
+            return await service.GetAll();
         }
 
-        // GET: api/Categorias/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Categoria>> GetCategoria(int id)
-        {
-            var categoria = await _context.Categorias.FindAsync(id);
-
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            return categoria;
-        }
-
-        // PUT: api/Categorias/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategoria(int id, Categoria categoria)
-        {
-            if (id != categoria.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(categoria).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoriaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Categorias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Categorias        
         [HttpPost]
-        public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
+        public async Task<ActionResult<ResponseDto>> PostCategoria(string categoria)
         {
-            _context.Categorias.Add(categoria);
-            await _context.SaveChangesAsync();
+            var categoriaDto = await service.Save(new CategoriaDto(categoria));
 
-            return CreatedAtAction("GetCategoria", new { id = categoria.ID }, categoria);
-        }
-
-        // DELETE: api/Categorias/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategoria(int id)
-        {
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CategoriaExists(int id)
-        {
-            return _context.Categorias.Any(e => e.ID == id);
+            return Created("PostCategoria", categoriaDto);
         }
     }
 }

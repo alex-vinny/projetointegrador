@@ -1,1 +1,1 @@
-Seguir tutorial do site official: https://angular.io/guide/setup-local
+Seguir tutorial do *site* official: [Link para acesso](https://angular.io/guide/setup-local).
