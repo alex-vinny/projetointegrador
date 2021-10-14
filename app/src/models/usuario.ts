@@ -3,8 +3,8 @@ export interface Usuario {
     email: string;
     nome: string;
     senha: string;
-    perfil: number;
+    perfil: string;
     idade: number;
-    sexo: number;
-    serieEscolar: number;
+    sexo: string;
+    serieEscolar: string;
 }
