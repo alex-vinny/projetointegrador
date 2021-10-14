@@ -1,16 +1,21 @@
 <div class="container mt-5">
   <div class="col-8 border rounded p-3 m-auto">
-    <h1>Login</h1>
+    <h2>Login</h2>
     <div class="mb-3">
+<<<<<<< HEAD
       <label for="exampleFormControlInput1" class="form-label">E-mail:</label>
       <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+=======
+      <label for="email" class="form-label">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="name@example.com">
+>>>>>>> 30234030e89897b72435c3a5fdf527ff6b1734fa
     </div>
     <div class="mb-3">
-      <label for="inputPassword" class="form-label">Senha:</label>
-      <input type="password" class="form-control" id="inputPassword">
+      <label for="password" class="form-label">Senha:</label>
+      <input type="password" class="form-control" id="password">
     </div>
     <div class="col-6 d-inline-block">
-      <button type="submit" class="btn btn-primary">Acessar</button>
+      <button type="submit" class="btn btn-primary" (click)="login()">Acessar</button>
     </div>
     <div class="col-3 d-inline-block">
       <button type="button" class="btn btn-link w-100 text-end">Esqueci a senha</button>

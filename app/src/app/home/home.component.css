@@ -1,0 +1,17 @@
+#table-cross td{
+    width: 30px !important;
+    max-width: 30px !important;
+}
+#tb-dicas tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.input-format{
+    width: 40px !important;
+    height: 40px !important;
+}
+.btn-iniciar{
+    margin-top: 1.6rem;
+}
+.w-td-index{
+    width: 50px !important;
+}
