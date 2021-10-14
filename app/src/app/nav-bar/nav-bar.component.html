@@ -4,11 +4,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <span class="material-icons-outlined">home</span>
+      <!-- <a class="navbar-brand" href="#">
+        <img src="src\img\Reflectare.jpeg" alt="" width="20px" height="20px"/>
+      </a> -->
       <a class="navbar-brand" href="#">Home</a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Cadastro</a>
+        <li *ngIf="userLogado.perfil != 'Aluno'" class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/cadastro">Cadastro</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#"></a>
@@ -19,8 +21,8 @@
       </ul>
       <form class="d-flex">
         <span class="me-1">Olá </span>
-        <span class="me-1">Carlos Pires Junior</span>
-        <span class="material-icons-outlined ">account_circle</span>
+        <span class="me-1 fw-bold">{{userLogado.nome}}</span>
+        <!-- <span class="material-icons-outlined">account_circle</span> -->
         <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button> -->
       </form>

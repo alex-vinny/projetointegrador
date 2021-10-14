@@ -17,7 +17,6 @@ export class AuthComponent implements OnInit {
   }
 
   avalAuth(){
-    console.log(sessionStorage.getItem('usuario'));
     if(sessionStorage.getItem('usuario') == null || sessionStorage.getItem('usuario') == ''){
       this.router.navigate(['login']);
     }
