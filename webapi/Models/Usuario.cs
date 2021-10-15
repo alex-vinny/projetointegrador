@@ -27,7 +27,7 @@ namespace ProjetoIntegrador.Api.Models
         Outro
     }
 
-    public class Usuario
+    public abstract class Usuario
     {
         public Usuario() { }
 
