@@ -146,7 +146,7 @@ namespace ProjetoIntegrador.Api.Services
                 if (model != null)
                     return ErrorResponse(ErrorTypes.NotAllowed, $"Usuário com o e-mail: {request.Email} já cadastrado.");
 
-                model = new Usuario();
+                model = FactoryUsuario(request.Perfil);
 
                 if (string.IsNullOrEmpty(request.Email))
                     return Null("Obrigatório informar o e-mail.");
@@ -174,6 +174,22 @@ namespace ProjetoIntegrador.Api.Services
             catch (Exception ex)
             {
                 return Exception(ex);
+            }
+        }
+
+        private Usuario FactoryUsuario(Perfis perfil)
+        {
+            switch (perfil)
+            {
+                case Perfis.Aluno:
+                    return new Aluno();
+                case Perfis.Professor:
+                    return new Professor();
+                case Perfis.Administrador:
+                    return new Administrador();
+                case Perfis.Convidado:
+                default:
+                    return new Convidado();
             }
         }
 
