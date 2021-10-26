@@ -25,6 +25,15 @@ namespace api.Controllers
             service = context;
         }
 
+        
+        [HttpGet]
+        public async Task<Palavra[]> GetPalavras()
+        {
+            // return this.SendResponse(await service.GetAlls());
+            return await service.GetAlls();
+        }
+        
+        
         // GET: api/Palavras/m/10/1
         [HttpGet("{categoria}/{qtd}/{serie}")]
         public async Task<ActionResult<ResponseDto>> GetPalavras(string categoria, int qtd, int serie = 0)

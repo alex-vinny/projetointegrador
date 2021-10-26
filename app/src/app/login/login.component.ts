@@ -1,9 +1,10 @@
+import { PalavraService } from './../../services/palavra.service';
 import { UsuarioService } from './../../services/usuario.service';
 import { Router } from '@angular/router';
 import { Usuario } from './../../models/usuario';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from 'src/services/login.service';
+import { Palavra } from 'src/models/palavra';
 
 @Component({
   selector: 'app-login',
@@ -12,14 +13,16 @@ import { LoginService } from 'src/services/login.service';
 })
 export class LoginComponent implements OnInit {
   userInfo: Usuario;
+  imgPath = ''
   constructor(
     private alerts: ToastrService,
-    private loginService: LoginService,
     private router: Router,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private palavraService: PalavraService
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
+    this.imgPath = '/src/img/reflectare.png'
     this.userInfo = {
       id: 0,
       email: 'carllos.pires@gmail.com',
@@ -29,10 +32,10 @@ export class LoginComponent implements OnInit {
       idade: 25,
       sexo: 'Masculino',
       serieEscolar: ''
-
     }
 
     this.usuarioService.setUser(this.userInfo);
+
 
     // this.alerts.error('Erro ao tentar identificar o usuário','Erro!', {
     //   positionClass: 'toast-top-full-width',
@@ -44,12 +47,12 @@ export class LoginComponent implements OnInit {
     //   timeOut: 6000
     // })
 
-    //this.getUsers();
+    this.getUsers();
     
   }
 
   getUsers(){
-    this.loginService.getUsuarios().subscribe(
+    this.usuarioService.getAllUsuarios().subscribe(
       (response: Usuario[]) => {
         console.log('Usuarios:', response);
       },
@@ -58,6 +61,8 @@ export class LoginComponent implements OnInit {
       }
     )
   }
+
+
 
   login(){
     let objEmail = document.getElementById('email') as HTMLInputElement

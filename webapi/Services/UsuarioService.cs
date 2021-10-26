@@ -37,7 +37,7 @@ namespace ProjetoIntegrador.Api.Services
                 var usuarios = await query.ToListAsync();
 
                 if (!usuarios.Any())
-                    Null("Nenhum usuário cadastrado.");
+                    Null("Nenhum usuï¿½rio cadastrado.");
 
                 return new ResponseDto
                 {
@@ -56,7 +56,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var model = await GetUsuario(id);
                 if (model == null)
-                    return Null($"Usuário com o ID: {id} não localizado.");
+                    return Null($"Usuï¿½rio com o ID: {id} nï¿½o localizado.");
 
                 return new ResponseDto
                 {
@@ -74,13 +74,13 @@ namespace ProjetoIntegrador.Api.Services
             return await _context.Usuarios.FindAsync(id);
         }
 
-        public async Task<ResponseDto> GetByEmail(string email)
+        public async Task<ResponseDto> GetByEmailSenha(string email, string senha)
         {
             try
             {
-                var model = await GetUsuarioByEmail(email);
+                var model = await GetUsuarioByEmail(email, senha);
                 if (model == null)
-                    return Null($"Usuário com o e-mail: {email} não cadastrado.");
+                    return Null($"UsuÃ¡rio ou senha incorreto");
 
                 return new ResponseDto
                 {
@@ -100,13 +100,20 @@ namespace ProjetoIntegrador.Api.Services
                             .FirstOrDefaultAsync();
         }
 
+        private async Task<Usuario> GetUsuarioByEmail(string email, string senha)
+        {
+            return await _context.Usuarios
+                            .Where(c => c.Email.Equals(email) && c.Senha.Equals(senha))
+                            .FirstOrDefaultAsync();
+        }
+
         public async Task<ResponseDto> Update(string email, UsuarioRequestDto request)
         {
             try
             {
                 var model = await GetUsuarioByEmail(email);
                 if (model == null)
-                    return Null($"Usuário com o e-mail: {email} não cadastrado.");
+                    return Null($"Usuï¿½rio com o e-mail: {email} nï¿½o cadastrado.");
                 
                 model.Nome = string.IsNullOrEmpty(request.Nome) ? model.Nome : request.Nome;
                 model.DicaSecreta = string.IsNullOrEmpty(request.DicaSecreta) ? model.DicaSecreta : request.DicaSecreta;
@@ -144,18 +151,18 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var model = await GetUsuarioByEmail(request.Email);
                 if (model != null)
-                    return ErrorResponse(ErrorTypes.NotAllowed, $"Usuário com o e-mail: {request.Email} já cadastrado.");
+                    return ErrorResponse(ErrorTypes.NotAllowed, $"Usuï¿½rio com o e-mail: {request.Email} jï¿½ cadastrado.");
 
                 model = FactoryUsuario(request.Perfil);
 
                 if (string.IsNullOrEmpty(request.Email))
-                    return Null("Obrigatório informar o e-mail.");
+                    return Null("Obrigatï¿½rio informar o e-mail.");
 
                 if (string.IsNullOrEmpty(request.Nome))
-                    return Null("Obrigatório informar o nome.");
+                    return Null("Obrigatï¿½rio informar o nome.");
 
                 if (string.IsNullOrEmpty(request.Senha))
-                    return Null("Obrigatório informar uma senha.");
+                    return Null("Obrigatï¿½rio informar uma senha.");
 
                 model.Email = request.Email;
                 model.Nome = request.Nome;
@@ -207,7 +214,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var model = await GetUsuario(id);
                 if (model == null)
-                    return Null($"não encontrado.");
+                    return Null($"nï¿½o encontrado.");
 
                 await DeleteUsuario(id);
                 return ResponseDto.Ok();
@@ -224,7 +231,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var model = await GetUsuarioByEmail(email);
                 if (model == null)
-                    return Null($"não encontrado.");
+                    return Null($"nï¿½o encontrado.");
 
                 await DeleteUsuario(model.ID);
                 return ResponseDto.Ok();
