@@ -27,10 +27,10 @@ namespace api.Controllers
         }
 
         // GET: api/Usuarios/5
-        [HttpGet("{email}")]
-        public async Task<ActionResult<ResponseDto>> GetUsuario(string email)
+        [HttpGet("{email}/{senha}")]
+        public async Task<ActionResult<ResponseDto>> GetUsuario(string email, string senha)
         {
-            return this.SendResponse(await service.GetByEmail(email));
+            return this.SendResponse(await service.GetByEmailSenha(email, senha));
         }
 
         // PUT: api/Usuarios/5

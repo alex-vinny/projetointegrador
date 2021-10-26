@@ -1,5 +1,4 @@
 import { UsuarioService } from './../services/usuario.service';
-import { LoginService } from './../services/login.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,7 +39,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
     TooltipModule.forRoot(),
 
   ],
-  providers: [LoginService, UsuarioService],
+  providers: [UsuarioService],
   bootstrap: [AppComponent]
   
 })

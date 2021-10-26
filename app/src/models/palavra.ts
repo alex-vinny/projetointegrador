@@ -1,8 +1,12 @@
+import { Categoria } from "./categoria";
+import { Usuario } from "./usuario";
+
 export interface Palavra {
-    id: number;
-    palavra: string;
-    dica: string;
     categoria: string;
+    dica: string;
+    dicaSemAcento: string;
+    id: number;
     serieEscolar: string
-    responsavel: string;
+    valor: string
+    valorSemAcento: string;
 }

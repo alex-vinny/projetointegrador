@@ -1,3 +1,4 @@
+import { PalavraService } from './../../services/palavra.service';
 import { Router } from '@angular/router';
 import { Palavra } from './../../models/palavra';
 import { Component, OnInit } from '@angular/core';
@@ -15,43 +16,56 @@ export class CadastroComponent implements OnInit {
 
   constructor(
     private alerts: ToastrService,
-    private router: Router
+    private router: Router,
+    private palavraService: PalavraService
   ) { }
 
   ngOnInit() {
     this.authVerificacao();
-    this.arrPalavras = [
-      {
-        id: 0,
-        palavra: 'teste',
-        dica: 'teste1',
-        categoria: 'Português',
-        serieEscolar: 'Quinta Série',
-        responsavel: 'carllos.pires@gmail.com'
-      },
-      {
-        id: 1,
-        palavra: 'teste',
-        dica: 'teste2',
-        categoria: 'Português',
-        serieEscolar: 'Sexta Série',
-        responsavel: 'carllos.pires@gmail.com'
-      },
-      {
-        id: 3,
-        palavra: 'teste',
-        dica: 'teste3',
-        categoria: 'História',
-        serieEscolar: 'Oitava Série',
-        responsavel: 'carllos.pires@gmail.com'
-      },
-    ]
+    // this.arrPalavras = [
+    //   {
+    //     id: 0,
+    //     valor: 'teste',
+    //     dica: 'teste1',
+    //     categoria: 'Português',
+    //     serieEscolar: 'Quinta Série',
+    //     responsavel: 'carllos.pires@gmail.com'
+    //   },
+    //   {
+    //     id: 1,
+    //     valor: 'teste',
+    //     dica: 'teste2',
+    //     categoria: 'Português',
+    //     serieEscolar: 'Sexta Série',
+    //     responsavel: 'carllos.pires@gmail.com'
+    //   },
+    //   {
+    //     id: 3,
+    //     valor: 'teste',
+    //     dica: 'teste3',
+    //     categoria: 'História',
+    //     serieEscolar: 'Oitava Série',
+    //     responsavel: 'carllos.pires@gmail.com'
+    //   },
+    // ]
   }
   
   authVerificacao(){
     if(sessionStorage.getItem('auth') != 'true'){
       this.router.navigate(['auth']);
     }
+  }
+
+  getPalavras(){
+    this.palavraService.getAllPalavras().subscribe(
+      (response: Palavra[]) => {
+        console.log('Palavras:', response);
+        this.arrPalavras = response;
+      },
+      error => {
+        console.log(error)
+      }
+    )
   }
 
   addPalavra(){
@@ -65,11 +79,13 @@ export class CadastroComponent implements OnInit {
     
     palavraForm = {
       id: id,
-      palavra: objPalavra.value,
+      valor: objPalavra.value,
+      valorSemAcento: objPalavra.value, 
       dica: objDica.value,
+      dicaSemAcento: objDica.value,
       categoria: objCategoria.value,
       serieEscolar: objSerieEscolar.value,
-      responsavel: 'carllos.pires@gmail.com' // colocar noma usuário
+      //responsavel: 'carllos.pires@gmail.com' // colocar noma usuário
     }
     this.arrPalavras.push(palavraForm);
         
@@ -77,11 +93,13 @@ export class CadastroComponent implements OnInit {
 
     palavraForm = {
       id: 0,
-      palavra: '',
+      valor: '',
+      valorSemAcento: '',
       dica: '',
+      dicaSemAcento: '',
       categoria: '',
       serieEscolar: '',
-      responsavel: ''
+      //responsavel: ''
     } 
 
     this.alerts.success("Palavra adicionada.",'Sucesso!', {
@@ -102,21 +120,21 @@ export class CadastroComponent implements OnInit {
     let objCategoria = document.getElementById('categoria') as HTMLInputElement
     let objSerieEscolar = document.getElementById('serie-escolar') as HTMLInputElement
 
-    objPalavra.value = this.palavraSelect.palavra;
-    objDica.value = this.palavraSelect.dica;
-    objCategoria.value = this.palavraSelect.categoria;
-    objSerieEscolar.value = this.palavraSelect.serieEscolar;
+    // objPalavra.value = this.palavraSelect.palavra;
+    // objDica.value = this.palavraSelect.dica;
+    // objCategoria.value = this.palavraSelect.categoria;
+    // objSerieEscolar.value = this.palavraSelect.serieEscolar;
 
   }
 
   editPalavra(){
     
     for (let i = 0; i < this.arrPalavras.length; i++) {
-      if(this.arrPalavras[i].id == this.palavraSelect.id)
-      console.log('Item :', this.arrPalavras[i].id);
-      else {
+      // if(this.arrPalavras[i].id == this.palavraSelect.id)
+      // console.log('Item :', this.arrPalavras[i].id);
+      // else {
 
-      }
+      // }
       
     }
 

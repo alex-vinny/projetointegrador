@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  urlWebService: document.location.protocol + '//' + document.location.host + '/',
+  BaseUrl: '/api'
 };

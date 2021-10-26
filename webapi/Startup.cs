@@ -28,12 +28,25 @@ namespace ProjetoIntegrador.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
             });
+            
 
-            // Injeção de dependências das Services
+            // Injeï¿½ï¿½o de dependï¿½ncias das Services
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<IPalavraService, PalavraService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<ISessaoService, SessaoService>();
+            services.AddCors();
+
+            // services.AddCors(options =>
+            // {
+            //     options.AddDefaultPolicy(
+            //         builder => builder.WithOrigins("http://localhost:4200")
+            //             .AllowAnyOrigin() 
+            //             .AllowAnyMethod()
+            //             .AllowAnyHeader()
+            //             .AllowCredentials()
+            //         );
+            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +72,8 @@ namespace ProjetoIntegrador.Api
 
             //app.UseForwardedHeaders();
 
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -69,6 +84,8 @@ namespace ProjetoIntegrador.Api
             {
                 endpoints.MapControllers();
             });
+
+            
         }
 
         /* This method gets called by the runtime. Use this method to add services to the container.
