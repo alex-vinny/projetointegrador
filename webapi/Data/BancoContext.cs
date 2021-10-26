@@ -23,6 +23,13 @@ namespace ProjetoIntegrador.Api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Usuario>()
+                .HasDiscriminator<Perfis>(c => c.Perfil)
+                .HasValue<Administrador>(Perfis.Administrador)
+                .HasValue<Convidado>(Perfis.Convidado)
+                .HasValue<Aluno>(Perfis.Aluno)
+                .HasValue<Professor>(Perfis.Professor);
+
             modelBuilder.Entity<Categoria>()
                 .HasIndex(p => p.DescricaoSemAcento)
                 .IsUnique(true);
