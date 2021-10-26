@@ -8,7 +8,7 @@ namespace ProjetoIntegrador.Api.Services
     public interface IUsuarioService
     {
         Task<ResponseDto> GetAll();
-        Task<ResponseDto> GetByEmail(string email);
+        Task<ResponseDto> GetByEmailSenha(string email, string senha);
         Task<ResponseDto> Get(int id);
         Task<ResponseDto> Update(string email, UsuarioRequestDto request);
         Task<ResponseDto> Save(UsuarioDto request);
