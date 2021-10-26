@@ -54,10 +54,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let palavra of arrPalavras">
-            <td class="align-middle">{{palavra.palavra}}</td>
+            <!-- <td class="align-middle">{{palavra.palavra}}</td>
             <td class="align-middle">{{palavra.dica}}</td>
             <td class="align-middle">{{palavra.categoria}}</td>            
-            <td class="align-middle">{{palavra.serieEscolar}}</td>            
+            <td class="align-middle">{{palavra.serieEscolar}}</td>             -->
             <td class="text-end align-middle">              
               <div class="btn-group me-2" role="group" aria-label="First group">
                 <button type="button" class="btn btn-success" (click)="palavraSelect = palavra; newItem = false; populaForm()">

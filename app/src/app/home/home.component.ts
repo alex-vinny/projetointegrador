@@ -1,8 +1,12 @@
+import { PalavraService } from './../../services/palavra.service';
+import { CategoriaService } from './../../services/categoria.service';
+import { Categoria } from './../../models/categoria';
 import { UsuarioService } from './../../services/usuario.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/models/usuario';
 import { of } from 'rxjs';
+import { Palavra } from 'src/models/palavra';
 //import { clg } from './../../../node_modules/crossword-layout-generator/src/layout_generator.js';
 declare var require: any;
 // declare var clg: any;
@@ -15,13 +19,17 @@ declare var require: any;
 export class HomeComponent implements OnInit {
   usuario: Usuario;
   user: any;
-  inputJson: any;
+  arrPalavras: Palavra[] = [];
+  inputJson: any[] = [];
   outputHtml: any;
   outputJson: any;
+  arrCategoria: Categoria;
 
   constructor(
     private router: Router,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private categoriService: CategoriaService,
+    private palavraService: PalavraService,
   ) { }
 
   ngOnInit() { 
@@ -32,22 +40,53 @@ export class HomeComponent implements OnInit {
     console.log('Usuario: ', this.usuario);
     this.authVerificacao();
 
-    this.inputJson = [
-      {"clue":"Como fazer o teste 1","answer":"teste1"},
-      {"clue":"Como fazer o teste 2","answer":"teste2"},
-      {"clue":"Como fazer o teste 3","answer":"teste3"},
-      {"clue":"Como fazer o teste 4","answer":"teste4"},
-      {"clue":"Como fazer o teste 5","answer":"fazer5"}
-    ]
+    // this.inputJson = [
+    //   {"clue":"Como fazer o teste 1","answer":"teste1"},
+    //   {"clue":"Como fazer o teste 2","answer":"teste2"},
+    //   {"clue":"Como fazer o teste 3","answer":"teste3"},
+    //   {"clue":"Como fazer o teste 4","answer":"teste4"},
+    //   {"clue":"Como fazer o teste 5","answer":"fazer5"}
+    // ]
 
-    this.preLayout();
+    
+    this.getAllCategorias();
+    this.getPalavras();
   }
 
+  getAllCategorias(){
+    this.categoriService.getAllCategorias().subscribe(
+      (response: Categoria[]) => {
+        console.log('Categorias:', response);
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
 
   authVerificacao(){
     if(sessionStorage.getItem('auth') != 'true'){
       this.router.navigate(['auth']);
     }
+  }
+
+  getPalavras(){
+    this.palavraService.getAllPalavras().subscribe(
+      (response: Palavra[]) => {
+        console.log('AllPalavras: ', response)
+        for (let i = 0; i < 10; i++) {
+          this.inputJson.push({
+            'clue': response[i].dica,
+            'answer': response[i].valorSemAcento.toUpperCase()
+          });    
+        }
+        this.preLayout();
+        console.log("Palavras: ", this.inputJson);
+      },
+      error => {
+        console.log(error)
+      }
+    )
   }
 
   preLayout(){

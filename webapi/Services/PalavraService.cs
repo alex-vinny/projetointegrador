@@ -27,7 +27,7 @@ namespace ProjetoIntegrador.Api.Services
                 var palavra = await GetPalavraByValor(valor);
 
                 if (palavra == null)
-                    return Null($"Palavra: {valor} não cadastrada.");
+                    return Null($"Palavra: {valor} nï¿½o cadastrada.");
 
                 return palavra.MakeResponse();
             }
@@ -43,6 +43,46 @@ namespace ProjetoIntegrador.Api.Services
             return await _context.Palavras
                     .Where(c => c.ValorSemAcento.Equals(valor))
                     .FirstOrDefaultAsync();
+        }
+
+        public async Task<Palavra[]> GetAlls()
+        {
+            return await GetAllsTeste();
+        }
+
+        // public async Task<ResponseDto> GetAlls(RequestDto dto)
+        // {
+        //     try
+        //     {
+        //         var query = _context.Palavras
+        //             .OrderBy(c => c.Valor)
+        //             .Select(c => c.MakeResponse());
+
+        //         var palavra = await query.ToListAsync();
+
+        //         if (!palavra.Any())
+        //             Null("Nenhum usuï¿½rio cadastrado.");
+
+        //         return new ResponseDto
+        //         {
+        //             { "palavra", palavra }
+        //         };
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return Exception(ex);
+        //     }
+        // }
+
+        private async Task<Palavra[]> GetAllsTeste()        
+        {            
+            // IQueryable<Palavra> query = _context.Palavras;
+            // query = query.OrderByDescending(c => c.Valor);            
+            // return await query.ToListAsync();
+
+            return await _context.Palavras
+                    .Where(c => c.Valor != null)
+                    .ToArrayAsync();
         }
 
         public async Task<ResponseDto> GetAll(PalavraDto request)
@@ -86,7 +126,7 @@ namespace ProjetoIntegrador.Api.Services
 
                 return ErrorResponse(ErrorTypes.Null,
                         $"Nenhum palavra cadastrada para categoria: {request.Categoria}",
-                        request.SerieEscolar > 0 ? $"Nenhum palavra cadastrada para série escolar: {request.SerieEscolar}" : "");
+                        request.SerieEscolar > 0 ? $"Nenhum palavra cadastrada para sï¿½rie escolar: {request.SerieEscolar}" : "");
             }
             catch (Exception ex)
             {
@@ -102,7 +142,7 @@ namespace ProjetoIntegrador.Api.Services
                 if (palavra != null)
                     return palavra.MakeResponse();
 
-                return Null($"Palavra com ID: {id} não cadastrada.");
+                return Null($"Palavra com ID: {id} nï¿½o cadastrada.");
             }
             catch (Exception ex)
             {
@@ -117,12 +157,12 @@ namespace ProjetoIntegrador.Api.Services
                 var palavra = await GetPalavraByValor(valorPalavra);
 
                 if (palavra == null)
-                    return Null($"Palavra não localizada para atualização: {valorPalavra}");
+                    return Null($"Palavra nï¿½o localizada para atualizaï¿½ï¿½o: {valorPalavra}");
 
                 var categoria = await GetCategoria(descricaoCategoria);
 
                 if (categoria == null)
-                    return Null($"Categoria não localizada para atualização: {descricaoCategoria}");
+                    return Null($"Categoria nï¿½o localizada para atualizaï¿½ï¿½o: {descricaoCategoria}");
 
                 palavra.Categoria = categoria;
 
@@ -145,7 +185,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var palavra = await GetPalavraByValor(request.Palavra);
                 if (palavra == null)
-                    return Null($"Palavra não localizada para atualização: {request.Palavra}");
+                    return Null($"Palavra nï¿½o localizada para atualizaï¿½ï¿½o: {request.Palavra}");
 
                 palavra.Dica = string.IsNullOrEmpty(request.DicaPalavra) ? palavra.Dica : request.DicaPalavra;
                 palavra.DicaSemAcento = palavra.Dica.RemoverAcentos();
@@ -183,13 +223,13 @@ namespace ProjetoIntegrador.Api.Services
             try
             {
                 if (string.IsNullOrEmpty(request.Palavra))
-                    return Error("Obrigatório informar a palavra.");
+                    return Error("Obrigatï¿½rio informar a palavra.");
 
                 if (string.IsNullOrEmpty(request.DicaPalavra))
-                    return Error("Obrigatório informar uma dica.");
+                    return Error("Obrigatï¿½rio informar uma dica.");
 
                 if (string.IsNullOrEmpty(request.Categoria))
-                    return Error("Obrigatório informar uma categoria.");
+                    return Error("Obrigatï¿½rio informar uma categoria.");
 
                 var palavra = await GetPalavraByValor(request.Palavra);
                 
@@ -252,7 +292,7 @@ namespace ProjetoIntegrador.Api.Services
                 if(model != null)
                     return await Delete(model.ID);
 
-                return Null("Não encontrado");
+                return Null("Nï¿½o encontrado");
             }
             catch (Exception ex)
             {
@@ -270,7 +310,7 @@ namespace ProjetoIntegrador.Api.Services
                     return ResponseDto.Ok();
                 }
 
-                return Null("Não encontrado");
+                return Null("Nï¿½o encontrado");
             }
             catch (Exception ex)
             {
@@ -292,5 +332,7 @@ namespace ProjetoIntegrador.Api.Services
         {
             return _context.Palavras.Any(e => e.ID == id);
         }
+
+
     }
 }
