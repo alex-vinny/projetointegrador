@@ -23,13 +23,12 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsuarios()
         {
-            object o = this.SendResponseLista(await service.GetAll());
-            return o;
+            return this.SendResponseLista(await service.GetAll());
         }
 
         // GET: api/Usuarios/5
         [HttpGet("{email}/{senha}")]
-        public async Task<ActionResult<ResponseDto>> GetUsuario(string email, string senha)
+        public async Task<IActionResult> GetUsuario(string email, string senha)
         {
             return this.SendResponse(await service.GetByEmailSenha(email, senha));
         }

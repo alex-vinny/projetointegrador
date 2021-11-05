@@ -20,12 +20,6 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        
-        
-        
-        
-        
-        
         public async Task<ResponseDto> GetByValor(string valor)
         {
             try
@@ -51,53 +45,24 @@ namespace ProjetoIntegrador.Api.Services
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Palavra[]> GetAllPalavras()
-        {
-            return await GePalavras();
-        }
-
-        private async Task<Palavra[]> GePalavras()        
-        {            
-            return await _context.Palavras
-                    .Where(c => c.Valor != null)
-                    .ToArrayAsync();
-        }
-
-        
-        
-        
-        public async Task<Palavra[]> GetPalavrasByCategoriaQtd(int categoria, int qtd)
-        {
-            return await GePalavrasCatQtd(categoria, qtd);
-        }
-
-        private async Task<Palavra[]> GePalavrasCatQtd(int categoria, int qtd)        
-        {            
-            return await _context.Palavras
-                    .Where(c => c.Categoria.Equals(categoria))
-                    .ToArrayAsync();
-        }
-
-
-
-        public async Task<ResponseDto> GetAll(PalavraDto request)
+        public async Task<List<ResponseDto>> GetAll(PalavraDto request)
         {
             try
             {
                 var query = _context.Palavras.AsQueryable();
+                query = query.Include(c => c.Categoria);
 
                 if (!string.IsNullOrEmpty(request.Categoria))
                 {
                     request.Categoria = request.Categoria.RemoverAcentos(true);
-                    query = query                            
-                            .Include(c => c.Categoria)
-                            .Where(c => c.Categoria.DescricaoSemAcento.Equals(request.Categoria));
+                    query = query.Where(c => c.Categoria.DescricaoSemAcento.Equals(request.Categoria));
 
                     if (request.SerieEscolar > 0)                    
                         query = query.Where(c => c.SerieEscolar == request.SerieEscolar);                    
                 }
 
-                query = query.Take(Constants.TAMANHO_PAGINA);
+                if(request.QtdItens != Constants.MAX_PALAVRAS)
+                    query = query.Take(Constants.TAMANHO_PAGINA);
 
                 bool ordenarAcendent = (new Random().Next(0, 1) == 1 ? true : false);
 
@@ -106,26 +71,31 @@ namespace ProjetoIntegrador.Api.Services
                 else
                     query = query.OrderBy(c => c.ValorSemAcento);
 
-                var resultado = query
-                                    .Select(c => c.MakeResponse())
-                                    //.Distinct(new PalavraComparador())
-                                    .Take(request.QtdItens);
+                var resultado = query.Select(c => c.MakeResponse());
+
+                if (request.QtdItens != Constants.MAX_PALAVRAS)
+                {
+                    resultado = resultado.Take(request.QtdItens);
+                }
 
                 var palavras = await resultado.ToListAsync();
 
                 if (palavras.Any())
-                    return new ResponseDto
-                    {
-                        { "palavras", palavras }
-                    };
+                    return palavras;
 
-                return ErrorResponse(ErrorTypes.Null,
+                var erro = ErrorResponse(ErrorTypes.Null,
                         $"Nenhum palavra cadastrada para categoria: {request.Categoria}",
                         request.SerieEscolar > 0 ? $"Nenhum palavra cadastrada para s�rie escolar: {request.SerieEscolar}" : "");
+                
+                return new[]
+                {
+                    erro
+                }
+                .ToList();
             }
             catch (Exception ex)
             {
-                return Exception(ex);   
+                return new[] { Exception(ex) }.ToList();
             }
         }
         
@@ -163,10 +133,7 @@ namespace ProjetoIntegrador.Api.Services
 
                 await UpdatePalavra(palavra.ID, palavra);
 
-                return new ResponseDto
-                {
-                    { "palavra", palavra.MakeResponse() }
-                };
+                return palavra.MakeResponse();
             }
             catch (Exception ex)
             {
@@ -230,10 +197,7 @@ namespace ProjetoIntegrador.Api.Services
                 
                 if (palavra != null)
                 {
-                    return new ResponseDto
-                    {
-                        { "palavra", palavra.MakeResponse() }
-                    };
+                    return palavra.MakeResponse();
                 }
                 else
                 {
@@ -327,7 +291,5 @@ namespace ProjetoIntegrador.Api.Services
         {
             return _context.Palavras.Any(e => e.ID == id);
         }
-
-
     }
 }

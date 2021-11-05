@@ -20,12 +20,12 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<ResponseDto> GetAll()
+        public async Task<List<ResponseDto>> GetAll()
         {
             return await GetAll(BaseRequest.DefaultPagination);
         }
 
-        private async Task<ResponseDto> GetAll(BaseRequest dto)
+        private async Task<List<ResponseDto>> GetAll(BaseRequest dto)
         {
             try
             {
@@ -35,22 +35,18 @@ namespace ProjetoIntegrador.Api.Services
                     .Take(dto.Take.Value)
                     .Select(c => c.MakeResponse());
 
-                var categorias = await query.ToArrayAsync();
+                var categorias = await query.ToListAsync();
 
                 if (!categorias.Any())
-                    return Null("Nenhuma categoria cadastrada.");
+                    return new[] { Null("Nenhuma categoria cadastrada.") }.ToList();
 
-                return new ResponseDto
-                {
-                    { "categorias", categorias }
-                };
+                return categorias;
             }
             catch (Exception ex)
             {
-                return Exception(ex);
+                return new[] { Exception(ex) }.ToList();
             }
         }
-
         
         public async Task<Categoria[]> GetAllCategoria()
         {
@@ -61,10 +57,8 @@ namespace ProjetoIntegrador.Api.Services
         {
             return await _context.Categorias
                     .Where(c => c.Descricao != null)
-                    .ToArrayAsync();               
- 
+                    .ToArrayAsync(); 
         }
-
         
         public async Task<ResponseDto> Get(int id)
         {

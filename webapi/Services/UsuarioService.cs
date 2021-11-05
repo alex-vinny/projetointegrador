@@ -40,9 +40,6 @@ namespace ProjetoIntegrador.Api.Services
                     Null("Nenhum usu�rio cadastrado.");
 
                 return usuarios;
-                // {
-                //     { "usuarios", usuarios }
-                // };
             }
             catch (Exception ex)
             {
@@ -82,10 +79,7 @@ namespace ProjetoIntegrador.Api.Services
                 if (model == null)
                     return Null($"Usuário ou senha incorreto");
 
-                return new ResponseDto
-                {
-                    { "usuario", model.MakeResponse() }
-                };
+                return model.MakeResponse();                
             }
             catch (Exception ex)
             {
@@ -173,10 +167,7 @@ namespace ProjetoIntegrador.Api.Services
 
                 await Save(model);
 
-                return new ResponseDto
-                {
-                    { "usuario", model.MakeResponse() }
-                };
+                return model.MakeResponse();
             }
             catch (Exception ex)
             {
