@@ -1,3 +1,4 @@
+import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
 
 
 
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'cadastro', component: CadastroComponent},
   {path: 'novo-usuario', component: NovoUsuarioComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'editar-usuario', component: EditarUsuarioComponent},
+  {path: 'login', component: LoginComponent},  
   {path: '', redirectTo: 'auth', pathMatch: 'full'},
   {path: '**', redirectTo: 'auth', pathMatch: 'full'},
 ];

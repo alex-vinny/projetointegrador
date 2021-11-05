@@ -15,9 +15,11 @@ import { HomeComponent } from './home/home.component';
 import { NovoUsuarioComponent } from './novo-usuario/novo-usuario.component';
 import { AuthComponent } from './auth/auth.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
 
 @NgModule({
-  declarations: [						
+  declarations: [							
       AppComponent,
       LoginComponent,
       CadastroComponent,
@@ -25,6 +27,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       NovoUsuarioComponent,
       AuthComponent,
       NavBarComponent,
+      EditarUsuarioComponent
    ],
   imports: [
     BrowserModule,
@@ -37,6 +40,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       progressBar: true
     }),
     TooltipModule.forRoot(),
+    ReactiveFormsModule
 
   ],
   providers: [UsuarioService],

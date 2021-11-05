@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
   inputJson: any[] = [];
   outputHtml: any;
   outputJson: any;
-  arrCategoria: Categoria;
+  arrCategoria: Categoria[] = [];
 
   constructor(
     private router: Router,
@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
     }
     console.log('Usuario: ', this.usuario);
     this.authVerificacao();
+    this.getAllCategorias();
 
     // this.inputJson = [
     //   {"clue":"Como fazer o teste 1","answer":"teste1"},
@@ -48,15 +49,13 @@ export class HomeComponent implements OnInit {
     //   {"clue":"Como fazer o teste 5","answer":"fazer5"}
     // ]
 
-    
-    this.getAllCategorias();
-    this.getPalavras();
   }
 
   getAllCategorias(){
     this.categoriService.getAllCategorias().subscribe(
       (response: Categoria[]) => {
-        console.log('Categorias:', response);
+        this.arrCategoria = response;
+        //console.  log('Categorias:', response);
       },
       error => {
         console.log(error)
@@ -67,6 +66,9 @@ export class HomeComponent implements OnInit {
   authVerificacao(){
     if(sessionStorage.getItem('auth') != 'true'){
       this.router.navigate(['auth']);
+    }
+    else {
+      this.getPalavras();
     }
   }
 

@@ -21,9 +21,10 @@ namespace api.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
-        public async Task<ActionResult<ResponseDto>> GetUsuarios()
+        public async Task<IActionResult> GetUsuarios()
         {
-            return this.SendResponse(await service.GetAll());
+            object o = this.SendResponseLista(await service.GetAll());
+            return o;
         }
 
         // GET: api/Usuarios/5

@@ -8,8 +8,13 @@ namespace ProjetoIntegrador.Api.Services
 {
     public interface IPalavraService
     {
+        Task<Palavra[]> GetAllPalavras();
+
+        
+        Task<Palavra[]> GetPalavrasByCategoriaQtd(int categoria, int qtd);
+
+
         Task<ResponseDto> GetAll(PalavraDto request);
-        Task<Palavra[]> GetAlls();
         Task<ResponseDto> Get(int id);
         Task<ResponseDto> GetByValor(string palavra);
         Task<ResponseDto> Update(PalavraRequestDto request);

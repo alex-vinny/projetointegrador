@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { PalavraService } from './../../services/palavra.service';
 import { Router } from '@angular/router';
 import { Palavra } from './../../models/palavra';
@@ -10,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./cadastro.component.css']
 })
 export class CadastroComponent implements OnInit {
+  registerForm: FormGroup;
   arrPalavras: Palavra[] = [];
   newItem = true;
   palavraSelect: Palavra;
@@ -53,6 +55,9 @@ export class CadastroComponent implements OnInit {
   authVerificacao(){
     if(sessionStorage.getItem('auth') != 'true'){
       this.router.navigate(['auth']);
+    }
+    else {
+      this.palavraService.getAllPalavras
     }
   }
 
