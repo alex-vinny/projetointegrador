@@ -52,6 +52,15 @@ namespace ProjetoIntegrador.Api.Services
                 var query = _context.Palavras.AsQueryable();
                 query = query.Include(c => c.Categoria);
 
+                if(request.InformarCategoria && string.IsNullOrEmpty(request.Categoria))
+                {
+                    return new[]
+                    {
+                        ErrorResponse(ErrorTypes.Null, "Obrigatório informar a categoria para palavra.")
+                    }
+                    .ToList();
+                }
+
                 if (!string.IsNullOrEmpty(request.Categoria))
                 {
                     request.Categoria = request.Categoria.RemoverAcentos(true);
