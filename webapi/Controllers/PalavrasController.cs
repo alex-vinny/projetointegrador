@@ -25,18 +25,28 @@ namespace api.Controllers
             service = context;
         }
 
-        
+        // GET: api/Palavras
         [HttpGet]
-        public async Task<Palavra[]> GetPalavras()
+        public async Task<IActionResult> GetPalavras()
         {
-            // return this.SendResponse(await service.GetAlls());
-            return await service.GetAlls();
+            var dto = new PalavraDto
+            {                
+                QtdItens = Constants.MAX_PALAVRAS
+            };
+
+            return this.SendResponseLista(await service.GetAll(dto));
         }
-        
+
+        // GET: api/Palavras/m/10/1
+        [HttpGet("{categoria}/{qtd}")]
+        public async Task<IActionResult> GetPalavrasByCategoriaQtd(string categoria, int qtd)
+        {
+            return await GetPalavras(categoria, qtd, 0);
+        }        
         
         // GET: api/Palavras/m/10/1
         [HttpGet("{categoria}/{qtd}/{serie}")]
-        public async Task<ActionResult<ResponseDto>> GetPalavras(string categoria, int qtd, int serie = 0)
+        public async Task<IActionResult> GetPalavras(string categoria, int qtd, int serie)
         {
             var dto = new PalavraDto
             {
@@ -45,7 +55,7 @@ namespace api.Controllers
                 SerieEscolar = serie
             };
 
-            return this.SendResponse(await service.GetAll(dto));
+            return this.SendResponseLista(await service.GetAll(dto));
         }
 
         // PUT: api/Palavras/
@@ -57,7 +67,7 @@ namespace api.Controllers
 
         // POST: api/Palavras
         [HttpPost]
-        public async Task<ActionResult<PalavraDto>> PostPalavra(PalavraRequestDto request)
+        public async Task<IActionResult> PostPalavra(PalavraRequestDto request)
         {
             return this.SendResponse(await service.Save(request));
         }

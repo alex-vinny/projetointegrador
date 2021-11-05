@@ -19,12 +19,12 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<ResponseDto> GetAll()
+        public async Task<List<ResponseDto>> GetAll()
         {
             return await GetAll(RequestDto.DefaultPagination);
         }
 
-        public async Task<ResponseDto> GetAll(RequestDto dto)
+        public async Task<List<ResponseDto>> GetAll(RequestDto dto)
         {
             try
             {
@@ -39,14 +39,11 @@ namespace ProjetoIntegrador.Api.Services
                 if (!usuarios.Any())
                     Null("Nenhum usu�rio cadastrado.");
 
-                return new ResponseDto
-                {
-                    { "usuarios", usuarios }
-                };
+                return usuarios;
             }
             catch (Exception ex)
             {
-                return Exception(ex);
+                return new[]{Exception(ex)}.ToList();
             }
         }
         
@@ -82,10 +79,7 @@ namespace ProjetoIntegrador.Api.Services
                 if (model == null)
                     return Null($"Usuário ou senha incorreto");
 
-                return new ResponseDto
-                {
-                    { "usuario", model.MakeResponse() }
-                };
+                return model.MakeResponse();                
             }
             catch (Exception ex)
             {
@@ -173,10 +167,7 @@ namespace ProjetoIntegrador.Api.Services
 
                 await Save(model);
 
-                return new ResponseDto
-                {
-                    { "usuario", model.MakeResponse() }
-                };
+                return model.MakeResponse();
             }
             catch (Exception ex)
             {
