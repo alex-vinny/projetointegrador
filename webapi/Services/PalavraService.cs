@@ -59,10 +59,7 @@ namespace ProjetoIntegrador.Api.Services
 
                     if (request.SerieEscolar > 0)                    
                         query = query.Where(c => c.SerieEscolar == request.SerieEscolar);                    
-                }
-
-                if(request.QtdItens != Constants.MAX_PALAVRAS)
-                    query = query.Take(Constants.TAMANHO_PAGINA);
+                }              
 
                 bool ordenarAcendent = (new Random().Next(0, 1) == 1 ? true : false);
 
@@ -73,15 +70,15 @@ namespace ProjetoIntegrador.Api.Services
 
                 var resultado = query.Select(c => c.MakeResponse());
 
-                if (request.QtdItens != Constants.MAX_PALAVRAS)
-                {
-                    resultado = resultado.Take(request.QtdItens);
-                }
-
                 var palavras = await resultado.ToListAsync();
 
                 if (palavras.Any())
-                    return palavras;
+                {
+                    if(request.QtdItens == Constants.MAX_PALAVRAS || request.QtdItens >= palavras.Count)
+                        return palavras;
+
+                    return palavras.TakeAfterShuffle(request.QtdItens);
+                }
 
                 var erro = ErrorResponse(ErrorTypes.Null,
                         $"Nenhum palavra cadastrada para categoria: {request.Categoria}",
