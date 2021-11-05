@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { UsuarioService } from './../../services/usuario.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +15,8 @@ export class NavBarComponent implements OnInit {
 
   constructor(
     private alerts: ToastrService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -27,6 +29,15 @@ export class NavBarComponent implements OnInit {
       this.user = sessionStorage.getItem('usuario');
       this.userLogado = JSON.parse(this.user);
     }
+  }
+
+  logout(){
+    sessionStorage.clear();
+    this.router.navigate(['login']);
+  }
+
+  editaPerfil(){
+    this.router.navigate(['editar-usuario']);
   }
 
 }

@@ -19,12 +19,12 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<ResponseDto> GetAll()
+        public async Task<List<ResponseDto>> GetAll()
         {
             return await GetAll(RequestDto.DefaultPagination);
         }
 
-        public async Task<ResponseDto> GetAll(RequestDto dto)
+        public async Task<List<ResponseDto>> GetAll(RequestDto dto)
         {
             try
             {
@@ -39,14 +39,14 @@ namespace ProjetoIntegrador.Api.Services
                 if (!usuarios.Any())
                     Null("Nenhum usu�rio cadastrado.");
 
-                return new ResponseDto
-                {
-                    { "usuarios", usuarios }
-                };
+                return usuarios;
+                // {
+                //     { "usuarios", usuarios }
+                // };
             }
             catch (Exception ex)
             {
-                return Exception(ex);
+                return new[]{Exception(ex)}.ToList();
             }
         }
         

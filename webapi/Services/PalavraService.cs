@@ -20,6 +20,12 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
+        
+        
+        
+        
+        
+        
         public async Task<ResponseDto> GetByValor(string valor)
         {
             try
@@ -45,45 +51,34 @@ namespace ProjetoIntegrador.Api.Services
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Palavra[]> GetAlls()
+        public async Task<Palavra[]> GetAllPalavras()
         {
-            return await GetAllsTeste();
+            return await GePalavras();
         }
 
-        // public async Task<ResponseDto> GetAlls(RequestDto dto)
-        // {
-        //     try
-        //     {
-        //         var query = _context.Palavras
-        //             .OrderBy(c => c.Valor)
-        //             .Select(c => c.MakeResponse());
-
-        //         var palavra = await query.ToListAsync();
-
-        //         if (!palavra.Any())
-        //             Null("Nenhum usu�rio cadastrado.");
-
-        //         return new ResponseDto
-        //         {
-        //             { "palavra", palavra }
-        //         };
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return Exception(ex);
-        //     }
-        // }
-
-        private async Task<Palavra[]> GetAllsTeste()        
+        private async Task<Palavra[]> GePalavras()        
         {            
-            // IQueryable<Palavra> query = _context.Palavras;
-            // query = query.OrderByDescending(c => c.Valor);            
-            // return await query.ToListAsync();
-
             return await _context.Palavras
                     .Where(c => c.Valor != null)
                     .ToArrayAsync();
         }
+
+        
+        
+        
+        public async Task<Palavra[]> GetPalavrasByCategoriaQtd(int categoria, int qtd)
+        {
+            return await GePalavrasCatQtd(categoria, qtd);
+        }
+
+        private async Task<Palavra[]> GePalavrasCatQtd(int categoria, int qtd)        
+        {            
+            return await _context.Palavras
+                    .Where(c => c.Categoria.Equals(categoria))
+                    .ToArrayAsync();
+        }
+
+
 
         public async Task<ResponseDto> GetAll(PalavraDto request)
         {

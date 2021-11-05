@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Dtos;
@@ -21,10 +22,25 @@ namespace api.Controllers
         }
 
         // GET: api/Categorias
+        // [HttpGet]
+        // public async Task<ActionResult<ResponseDto>> GetCategorias()
+        // {
+        //     return await service.GetAll();
+        // }
+
         [HttpGet]
-        public async Task<ActionResult<ResponseDto>> GetCategorias()
+        public async Task<ActionResult> GetAllCategoria()
         {
-            return await service.GetAll();
+
+            try
+            {
+                return Ok(await service.GetAllCategoria());
+            }
+            catch (System.Exception)
+            {
+                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Servidor Falhou");
+            }
         }
 
         // POST: api/Categorias        

@@ -30,7 +30,14 @@ namespace api.Controllers
         public async Task<Palavra[]> GetPalavras()
         {
             // return this.SendResponse(await service.GetAlls());
-            return await service.GetAlls();
+            return await service.GetAllPalavras();
+        }
+
+        [HttpGet("{categoria}/{qtd}")]
+        public async Task<Palavra[]> GetPalavrasByCategoriaQtd(int categoria, int qtd)
+        {
+            // return this.SendResponse(await service.GetAlls());
+            return await service.GetPalavrasByCategoriaQtd(categoria, qtd);
         }
         
         

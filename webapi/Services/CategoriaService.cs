@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +30,12 @@ namespace ProjetoIntegrador.Api.Services
             try
             {
                 var query = _context.Categorias
-                    .OrderBy(c => c.ID)
+                    .OrderBy(c => c.Descricao)
                     .Skip(dto.Skip.Value)
                     .Take(dto.Take.Value)
                     .Select(c => c.MakeResponse());
 
-                var categorias = await query.ToListAsync();
+                var categorias = await query.ToArrayAsync();
 
                 if (!categorias.Any())
                     return Null("Nenhuma categoria cadastrada.");
@@ -49,6 +50,21 @@ namespace ProjetoIntegrador.Api.Services
                 return Exception(ex);
             }
         }
+
+        
+        public async Task<Categoria[]> GetAllCategoria()
+        {
+            return await GetAllCategorias();
+        }
+        
+        private async Task<Categoria[]> GetAllCategorias()
+        {
+            return await _context.Categorias
+                    .Where(c => c.Descricao != null)
+                    .ToArrayAsync();               
+ 
+        }
+
         
         public async Task<ResponseDto> Get(int id)
         {
@@ -61,7 +77,7 @@ namespace ProjetoIntegrador.Api.Services
                 }
                 else
                 {
-                    return Null($"Id Categoria: {id} não localizado.");
+                    return Null($"Id Categoria: {id} nï¿½o localizado.");
                 }
             }
             catch(Exception ex)
@@ -76,7 +92,7 @@ namespace ProjetoIntegrador.Api.Services
 
             if (string.IsNullOrEmpty(request.Categoria))
             {
-                return Null("Obrigatório informar valor válido como categoria.");
+                return Null("Obrigatï¿½rio informar valor vï¿½lido como categoria.");
             }
 
             try
