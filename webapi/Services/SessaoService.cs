@@ -32,7 +32,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var usuario = await GetUsuarioByEmail(email);
                 if (usuario == null)
-                    return Null($"Não foi possível iniciar o jogo. Usuário com o e-mail: {email} não cadastrado.");
+                    return Null($"Nï¿½o foi possï¿½vel iniciar o jogo. Usuï¿½rio com o e-mail: {email} nï¿½o cadastrado.");
 
                 var model = await GetSessao(request.Id);
                 if (model == null)
@@ -46,7 +46,7 @@ namespace ProjetoIntegrador.Api.Services
                 }
 
                 if (request.AdicionarAcertos != null)
-                    model.Acertos += request.AdicionarAcertos;
+                    model.Acertos = model.Acertos + request.AdicionarAcertos;
                 else if (request.TotalAcertos != null)
                     model.Acertos = request.TotalAcertos;
 
@@ -88,7 +88,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var usuario = await GetUsuarioByEmail(email);
                 if (usuario == null)
-                    return Null($"Não foi possível iniciar o jogo. Usuário com o e-mail: {email} não cadastrado.");
+                    return Null($"Nï¿½o foi possï¿½vel iniciar o jogo. Usuï¿½rio com o e-mail: {email} nï¿½o cadastrado.");
 
                 var model = new Sessao();
                 model.Usuario = usuario;

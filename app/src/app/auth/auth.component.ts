@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent implements OnInit {
-
+  showModal = true;
   constructor(
     private router: Router,
   ) { }

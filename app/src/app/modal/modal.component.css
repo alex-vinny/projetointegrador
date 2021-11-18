@@ -1,0 +1,12 @@
+.modal{
+    background-color: rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.modal-content{
+    text-align: center;
+    background-color: transparent !important;
+    color: #fff;
+    margin-top: 40vh;
+    border: none;
+}
