@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   msgErroEmail = false;
   msgErroPassword = false;
   registerForm: FormGroup;
+  showModal = false;
 
   constructor(
     private alerts: ToastrService,
@@ -33,8 +34,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['home']);
     }
 
-    this.validation();
-    
+    this.validation();    
 
     // this.userInfo = {
     //   id: 0,
@@ -48,62 +48,23 @@ export class LoginComponent implements OnInit {
     //this.usuarioService.setUser(this.userInfo);
     //this.getUsers();
     
-  }
-
-  preLogin(){
-    let objEmail = document.getElementById('email') as HTMLInputElement;
-    let objPassword = document.getElementById('password') as HTMLInputElement;
-
-    objEmail.value == '' ? this.msgErroEmail = true : this.msgErroEmail = false;
-    objPassword.value == '' ? this.msgErroPassword = true : this.msgErroPassword = false;    
-
-    if(objEmail.value != '' && objPassword.value != ''){
-      this.enableAcessar = false;
-    }
-  }
+  }  
 
   login(){
+    this.showModal = true;
     let objEmail = document.getElementById('email') as HTMLInputElement;
-    let objPassword = document.getElementById('password') as HTMLInputElement;
+    let objPassword = document.getElementById('password') as HTMLInputElement; 
 
-    objEmail.value == '' ? this.msgErroEmail = true : this.msgErroEmail = false;
-    objPassword.value == '' ? this.msgErroPassword = true : this.msgErroPassword = false;    
-
-    if(objEmail.value == '' || objPassword.value == ''){
-      return;
-    }
-    else {
-      this.getUsuario(objEmail.value, objPassword.value);
-    } 
-    
-    
-    
-    
-    
-    
-    // if(objEmail.value == this.userInfo.email){
-    //   sessionStorage.setItem('usuario', JSON.stringify(this.userInfo));
-    //   sessionStorage.setItem('auth', 'true');
-    //   this.router.navigate(['home']);
-    // }
-    // else{
-    //   this.alerts.warning("Usuário não cadastrado, favor realizar o cadastro do usuário clicando em 'Cadastre-se aqui'",'Atenção!', {
-    //     positionClass: 'toast-top-full-width',
-    //     timeOut: 6000
-    //   })
-    // }
-  }
-
-  getUsuario(usuario: string, senha: string){
-    this.usuarioService.getUsuarioByEmailSenha(usuario, senha).subscribe(
+    this.usuarioService.getUsuarioByEmailSenha(objEmail.value, objPassword.value).subscribe(
       (response: Usuario) => {
-        console.log('Usuarios:', response.usuario);
+        console.log('Usuarios:', response);
         sessionStorage.setItem('usuario', JSON.stringify(response));
         sessionStorage.setItem('auth', 'true');
         this.router.navigate(['home']);
         this.usuarioService.setUser(response)
       },
       error => {
+        this.showModal = false;
         console.log(error);
         sessionStorage.removeItem('auth');
         sessionStorage.removeItem('usuario');

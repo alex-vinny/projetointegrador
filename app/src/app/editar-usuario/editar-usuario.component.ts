@@ -16,6 +16,7 @@ export class EditarUsuarioComponent implements OnInit {
   user: any;
   usuarioGet: Usuario;
   usuario: UsuarioPost;
+  showModal = true;
 
   constructor(
     private alerts: ToastrService,
@@ -43,59 +44,59 @@ export class EditarUsuarioComponent implements OnInit {
     this.registerForm = new FormGroup({
       nome: new FormControl('', Validators.required),
       perfil: new FormControl({value: '', disabled: true}),
-      // idade: new FormControl('', ),
-      // sexo: new FormControl('', ),
       email: new FormControl({value: '', disabled: true}),
       senha: new FormControl('', [Validators.required, Validators.minLength(6)]),
       palavraSecreta: new FormControl('', Validators.required),
-      dicaSecreta: new FormControl('')
+      dicaSecreta: new FormControl('', Validators.required)
     })
   }
 
 
   getInfoUser(){
+    this.showModal = true;
     this.user = sessionStorage.getItem('usuario');
     this.usuarioGet = JSON.parse(this.user);
 
-    console.log('UsuarioGet: ', this.usuarioGet.usuario);
+    console.log('UsuarioGet: ', this.usuarioGet);
 
-    this.registerForm.get('nome')?.setValue(this.usuarioGet.usuario.nome);
-    this.registerForm.get('perfil')?.setValue(this.usuarioGet.usuario.perfil);
-    this.registerForm.get('email')?.setValue(this.usuarioGet.usuario.email);
-    // this.registerForm.get('palavraSecreta')?.setValue(this.usuarioGet.usuario.palavraSecreta);
-    // this.registerForm.get('dicaSecreta')?.setValue(this.usuarioGet.usuario.dicaSecreta);
-
-
+    this.registerForm.get('nome')?.setValue(this.usuarioGet.nome);
+    this.registerForm.get('perfil')?.setValue(this.usuarioGet.perfil.codigo.toString());
+    this.registerForm.get('email')?.setValue(this.usuarioGet.email);
+    // this.registerForm.get('palavraSecreta')?.setValue(this.usuarioGet.palavraSecreta);
+    // this.registerForm.get('dicaSecreta')?.setValue(this.usuarioGet.dicaSecreta);
+    this.showModal = false;
   }
 
-
-
-
-
-
-
-
-  insertUser(){
-    this.usuario = Object.assign({}, this.registerForm.value);
-    var pPerfil = this.registerForm.get('perfil')?.value;
-    this.usuario.perfil = parseInt(pPerfil);    
-    console.log('Usuário: ', this.usuario);
+  updateUser(){
+    this.showModal = true;
+    var userUpdate = {
+      nome: this.registerForm.get('nome')?.value,
+      senha: this.registerForm.get('senha')?.value,
+      dicaSecreta: this.registerForm.get('dicaSecreta')?.value,
+      palavraSecreta: this.registerForm.get('palavraSecreta')?.value,
+    }
+    var email = this.registerForm.get('email')?.value;
+   
+    console.log('Usuário: ', userUpdate);
     
-    this.usuarioService.postUsuario(this.usuario).subscribe(
+    this.usuarioService.putUsuario(email, userUpdate).subscribe(
       (novoUsuario: any) => {
         //console.log('UsuarioCadastrado', novoUsuario);
+        this.showModal = false;
         this.alerts.success("Usuário editado com sucesso. Aguarde...",'Editado com sucesso!', {
           positionClass: 'toast-top-full-width',
           timeOut: 8000
         })
 
+        this.registerForm.reset();
+
         setTimeout(() => {
           this.router.navigate(['login'])
         }, 5000);
-        this.registerForm.reset();
 
       }, error => {
         console.log('Error: ', error);
+        this.showModal = false;
         if(error.status == 422){
           this.alerts.warning("Já há um usuário cadastrado com o email informado",'Atenção!', {
             positionClass: 'toast-top-full-width',

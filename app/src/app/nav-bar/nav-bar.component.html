@@ -5,11 +5,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
       <a class="navbar-brand" href="#">
-        <img class="logo-img" src="/assets/img/reflectare.png" alt="">
+        <img class="logo-img" src="/assets/img/reflectare_logo.png" alt="">
       </a>
       <a class="navbar-brand" href="#">Home</a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li *ngIf="userLogado.usuario.perfil.codigo != 0" class="nav-item">
+        <li *ngIf="userLogado.perfil.codigo != 0" class="nav-item">
           <a class="nav-link active" aria-current="page" routerLink="/cadastro">Cadastrar Palavra</a>
         </li>
         <li class="nav-item">
@@ -35,7 +35,10 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span>Olá </span>
-            <span class="me-1 fw-bold">{{userLogado.usuario.nome}}</span>
+            <span class="material-icons-outlined">
+              account_circle
+              </span>
+            <span class="me-1 fw-bold">{{userLogado.nome}}</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" (click)="editaPerfil()">Editar Perfil</a></li>

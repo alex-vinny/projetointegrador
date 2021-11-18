@@ -18,12 +18,20 @@ export class PalavraService {
     return this.http.get<Palavra[]>(this.url);
   }
 
-  postPalavra(palavra: Palavra){
+  getAllPalavrasByCategoriaQtd(categoria: string, qtd: number): Observable<Palavra[]>{
+    return this.http.get<Palavra[]>(this.url + '/' + categoria + '/' + qtd);
+  }
+
+  getAllPalavrasByQtd(qtd: number): Observable<Palavra[]>{
+    return this.http.get<Palavra[]>(this.url + '/' + qtd);
+  }
+
+  postPalavra(palavra: any){
     return this.http.post(this.url, palavra);
   }
 
-  putPalavra(palavra: Palavra){
-    return this.http.put(this.url, palavra);
+  putPalavra(palavra: string, categoria: string){
+    return this.http.put(this.url + '/' + palavra + '/' + categoria, '');
   }
 
 }
