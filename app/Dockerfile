@@ -1,5 +1,5 @@
 ### STAGE 1: Build ###
-FROM node AS build
+FROM node:lts AS build
 
 WORKDIR /src
 
