@@ -1,3 +1,7 @@
 table td{
     padding: 0.25rem;
 }
+.scroll-tb-palavras{
+ height: 80vh;
+ overflow-y: auto;
+}

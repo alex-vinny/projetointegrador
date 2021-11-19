@@ -1,0 +1,40 @@
+<app-modal *ngIf="showModal"></app-modal>
+<form [formGroup]="registerForm">
+  <div class="container mt-5">
+    <div class="col-8 border rounded p-3 m-auto">
+      <h2>Login</h2>
+      <div class="mb-3">
+        <label for="email" class="form-label">E-mail:</label>
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" formControlName="email"
+        [ngClass]="{'is-invalid': registerForm.get('email')?.errors && registerForm.get('email')?.touched}"
+        >
+        <div class="invalid-feedback">
+          Campo Obrigatório!
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Senha:</label>
+        <input type="password" class="form-control" id="password" formControlName="senha"
+        [ngClass]="{'is-invalid': registerForm.get('senha')?.errors && registerForm.get('senha')?.touched}">
+        <div class="invalid-feedback">
+          Campo Obrigatório!
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-5 d-inline-block">
+          <button class="btn btn-outline-primary" [disabled]="!registerForm.valid">Acessar</button>
+        </div>
+        <!-- <div class="col d-inline-block">
+          <button type="button" class="btn btn-link w-100 text-end" (click)="esqueciSenha()">Esqueci a senha</button>
+        </div> -->
+        <div class="col-7 d-inline-block text-end">
+          <button type="button" class="btn btn-outline-warning me-3">Esqueci a senha</button>
+          <button type="button" class="btn  btn-outline-info" tooltip="Realizar cadastro">Cadastre-se aqui</button>
+
+          <!-- <button type="button" class="btn btn-link w-100 text-end me-3 d-inline-block" (click)="esqueciSenha()">Esqueci a senha</button>
+          <button type="button" class="btn btn-link w-100 text-end pe-0 d-inline-block" tooltip="Realizar cadastro" (click)="cadastreAqui()">Cadastre-se aqui</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

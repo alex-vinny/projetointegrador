@@ -1,44 +1,67 @@
-<app-nav-bar></app-nav-bar>
-<div class="container-fluid">
-    <div class="row border-bottom mt-1 pb-3">
-        <div class="col-2 d-inline-block">
-            <label for="exampleFormControlInput1" class="form-label">Categoria:</label>
-            <select id="exampleFormControlInput1" class="form-select" aria-label="Selecione o tipo">
-            <option selected></option>
-            <option value="1">Aluno</option>
-            <option value="2">Professor</option>
-            </select>
+<app-modal *ngIf="showModal"></app-modal>
+<app-nav-bar class="fixed-top"></app-nav-bar>
+<div class="container-fluid mt-nav">
+    <div class="row">  
+        <div class="row border-bottom mt-1 pb-3">
+            <div class="col-2 d-inline-block">
+                <label for="categoria" class="form-label">Categoria:</label>
+                <select id="categoria" class="form-select" aria-label="Selecione o tipo" (change)="clearByChangeCart()">
+                <option value="" selected>Todas</option>
+                <option value="{{categoria.descricao}}" *ngFor="let categoria of arrCategoria">{{categoria.descricao}}</option>
+                <!-- <option value="Português">Português</option>
+                <option value="História">História</option> -->
+                </select>
+            </div>
+            <!-- <div class="col-2 d-inline-block">
+                <label for="exampleFormControlInput1" class="form-label">Serie Escolar:</label>
+                <select id="exampleFormControlInput1" class="form-select" aria-label="Selecione o tipo">
+                    <option selected></option>
+                    <option value="Quinta Série">Quinta Série</option>
+                    <option value="Sexta Série">Sexta Série</option>
+                    <option value="Oitava Série">Oitava Série</option>
+                </select>
+            </div> -->
+            <div class="col-2 d-inline-block">
+                <button *ngIf="showStartGame" id="iniciar" type="submit" class="btn btn-outline-info btn-iniciar" (click)="getPalavras()">
+                    <span class="material-icons-outlined">sports_esports</span>
+                    <span>Novo Jogo</span>
+                </button>
+            </div>
         </div>
-        <div class="col-2 d-inline-block">
-            <label for="exampleFormControlInput1" class="form-label">Serie Escolar:</label>
-            <select id="exampleFormControlInput1" class="form-select" aria-label="Selecione o tipo">
-                <option selected></option>
-                <option value="Português">Português</option>
-                <option value="História">História</option>
-            </select>
+        <div class="row m-auto"
+        [ngClass]="{'d-none ': loaded}"
+        >
+            <img class="m-auto img-reflectare" src="/assets/img/reflectare.png" alt="">
         </div>
-        <div class="col-2 d-inline-block">
-            <button id="iniciar" type="submit" class="btn btn-success btn-iniciar">Iniciar</button>
+        <div class="row mt-3"
+        [ngClass]="{'d-none ': !loaded}"
+        >
+            <div class="col-8 overflow-x-auto">
+                <table class="table table-borderless m-auto" id="table-cross"></table>
+            </div>
+            <div class="col-4 overflow-x-auto">
+                <table id="tb-dicas" class="table bt-0">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0 m-0 p-0">
+                                <h3 class="p-0 m-0">Dicas</h3>
+                            </th>
+                            <th class="border-top-0 m-0 p-0 text-end">
+                                <button *ngIf="!showStartGame" id="finalizar" type="" class="btn btn btn-success mt-0 mb-1" (click)="validAnswers()">
+                                    <span class="material-icons-outlined">verified</span>
+                                    Finalizar
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="{{'tr-' + i}}" *ngFor="let dica of inputJson; let i = index">
+                            <td class="w-td-index fw-bold">{{i}}.</td>
+                            <td>{{dica.clue}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-6">
-            <table class="table table-borderless m-auto" id="table-cross"></table>
-        </div>
-        <div class="col-6">
-            <table id="tb-dicas" class="table bt-0">
-                <thead>
-                    <th colspan="2" class="border-top-0 m-0 p-0">
-                        <h3 class="p-0 m-0">Dicas</h3>
-                    </th>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let dica of inputJson; let i = index">
-                        <td class="w-td-index fw-bold">{{i}}.</td>
-                        <td>{{dica.clue}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </div> 
 </div>

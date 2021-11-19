@@ -1,5 +1,4 @@
 import { UsuarioService } from './../services/usuario.service';
-import { LoginService } from './../services/login.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,9 +15,14 @@ import { HomeComponent } from './home/home.component';
 import { NovoUsuarioComponent } from './novo-usuario/novo-usuario.component';
 import { AuthComponent } from './auth/auth.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
+import { ModalComponent } from './modal/modal.component';
+import { RankingComponent } from './ranking/ranking.component';
+import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.component';
 
 @NgModule({
-  declarations: [						
+  declarations: [									
       AppComponent,
       LoginComponent,
       CadastroComponent,
@@ -26,6 +30,10 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       NovoUsuarioComponent,
       AuthComponent,
       NavBarComponent,
+      EditarUsuarioComponent,
+      ModalComponent,
+      RankingComponent,
+      EsqueceuSenhaComponent
    ],
   imports: [
     BrowserModule,
@@ -38,9 +46,10 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       progressBar: true
     }),
     TooltipModule.forRoot(),
+    ReactiveFormsModule
 
   ],
-  providers: [LoginService, UsuarioService],
+  providers: [UsuarioService],
   bootstrap: [AppComponent]
   
 })

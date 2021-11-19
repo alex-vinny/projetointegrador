@@ -10,8 +10,17 @@
     height: 40px !important;
 }
 .btn-iniciar{
-    margin-top: 1.6rem;
+    margin-top: 1.8rem;
 }
 .w-td-index{
     width: 50px !important;
+}
+.overflow-x-auto{
+    overflow-x: auto;
+}
+.img-reflectare{
+    width: 40%;
+    margin-top: 10%;
+    opacity: 0.6;
+    text-align: center;
 }

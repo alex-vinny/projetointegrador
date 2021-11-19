@@ -1,6 +1,0 @@
-{
-  "/api": {
-    "target": "https://projeto-integrador-turma-002.herokuapp.com",
-    "secure": false
-  }
-}

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,17 @@ namespace ProjetoIntegrador.Api.Services
             _context = context;
         }
 
-        public async Task<ResponseDto> GetAll()
+        public async Task<List<ResponseDto>> GetAll()
         {
             return await GetAll(BaseRequest.DefaultPagination);
         }
 
-        private async Task<ResponseDto> GetAll(BaseRequest dto)
+        private async Task<List<ResponseDto>> GetAll(BaseRequest dto)
         {
             try
             {
                 var query = _context.Categorias
-                    .OrderBy(c => c.ID)
+                    .OrderBy(c => c.Descricao)
                     .Skip(dto.Skip.Value)
                     .Take(dto.Take.Value)
                     .Select(c => c.MakeResponse());
@@ -37,17 +38,26 @@ namespace ProjetoIntegrador.Api.Services
                 var categorias = await query.ToListAsync();
 
                 if (!categorias.Any())
-                    return Null("Nenhuma categoria cadastrada.");
+                    return new[] { Null("Nenhuma categoria cadastrada.") }.ToList();
 
-                return new ResponseDto
-                {
-                    { "categorias", categorias }
-                };
+                return categorias;
             }
             catch (Exception ex)
             {
-                return Exception(ex);
+                return new[] { Exception(ex) }.ToList();
             }
+        }
+        
+        public async Task<Categoria[]> GetAllCategoria()
+        {
+            return await GetAllCategorias();
+        }
+        
+        private async Task<Categoria[]> GetAllCategorias()
+        {
+            return await _context.Categorias
+                    .Where(c => c.Descricao != null)
+                    .ToArrayAsync(); 
         }
         
         public async Task<ResponseDto> Get(int id)
@@ -61,7 +71,7 @@ namespace ProjetoIntegrador.Api.Services
                 }
                 else
                 {
-                    return Null($"Id Categoria: {id} não localizado.");
+                    return Null($"Id Categoria: {id} nï¿½o localizado.");
                 }
             }
             catch(Exception ex)
@@ -76,7 +86,7 @@ namespace ProjetoIntegrador.Api.Services
 
             if (string.IsNullOrEmpty(request.Categoria))
             {
-                return Null("Obrigatório informar valor válido como categoria.");
+                return Null("Obrigatï¿½rio informar valor vï¿½lido como categoria.");
             }
 
             try

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Dtos;
+using ProjetoIntegrador.Api.Extensions;
 using ProjetoIntegrador.Api.Models;
 using ProjetoIntegrador.Api.Services;
 using System.Collections.Generic;
@@ -22,11 +24,11 @@ namespace api.Controllers
 
         // GET: api/Categorias
         [HttpGet]
-        public async Task<ActionResult<ResponseDto>> GetCategorias()
+        public async Task<IActionResult> GetCategorias()
         {
-            return await service.GetAll();
+            return this.SendResponseLista(await service.GetAll());
         }
-
+        
         // POST: api/Categorias        
         [HttpPost]
         public async Task<ActionResult<ResponseDto>> PostCategoria(string categoria)

@@ -1,0 +1,89 @@
+<app-modal *ngIf="showModal"></app-modal>
+<form [formGroup]="registerForm">
+  <div class="container mt-5">
+    <div class="col-8 border rounded p-3 m-auto">
+      <h2>Editar Usuário</h2>
+      <div class="row">
+        <div class="mb-3 col-8 d-inline-block">
+          <label for="nome" class="form-label">Nome:</label>
+          <input type="text" class="form-control" id="nome" placeholder="Nome" formControlName="nome"
+          [ngClass]="{'is-invalid': registerForm.get('nome')?.errors && registerForm.get('nome')?.touched}"
+          >
+          <div class="invalid-feedback">
+            Campo Obrigatório!
+          </div>
+        </div>
+        <div class="mb-3 col-4 d-inline-block">
+          <label for="perfil" class="form-label">Perfil Usuário:</label>
+          <select id="perfil" class="form-select form-control" aria-label="Selecione o tipo" formControlName="perfil"
+          >
+            <option selected></option>
+            <option value="0">Aluno</option>
+            <option value="1">Professor</option>
+            <option value="2">Admin</option>
+            <option value="3">Convidado</option>
+          </select>
+          <div class="invalid-feedback">
+            Campo Obrigatório!
+          </div>        
+        <!-- <div class="mb-3 col d-inline-block">
+          <label for="idade" class="form-label">Idade:</label>
+          <input type="number" class="form-select form-control" id="idade" placeholder="Idade" formControlName="idade">
+        </div>
+        <div class="mb-3 col d-inline-block">
+        <label for="sexo" class="form-label">Sexo:</label>
+          <select id="sexo" class="form-select form-control" aria-label="Selecione o tipo" formControlName="sexo">
+            <option selected></option>
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+            <option value="O">Outros</option>
+          </select> -->
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input [disabled]=true type="email" class="form-control" id="email" placeholder="name@example.com" formControlName="email"
+        >
+        <!-- <div class="invalid-feedback">
+          Campo Obrigatório!
+        </div> -->
+      </div>
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha:</label>
+        <input type="text" class="form-control is-invalid" id="senha" formControlName="senha"
+        [ngClass]="{'is-invalid': registerForm.get('senha')?.errors && registerForm.get('senha')?.touched}">
+        
+        <div *ngIf="registerForm.get('senha')?.hasError('minlength') && registerForm.get('senha')?.touched" class="invalid-feedback">
+          Senha deve ter no mínimo 6 digitos!
+        </div>
+        <div *ngIf="registerForm.get('senha')?.hasError('required') && registerForm.get('senha')?.touched" class="invalid-feedback">
+          Campo Obrigatório!
+        </div>     
+      </div>
+      <div class="mb-3">
+        <label for="palavraSecreta" class="form-label">Palavra Segurança:</label>
+        <input type="text" class="form-control is-invalid" id="palavraSecreta" placeholder="Insira a palavra secreta" formControlName="palavraSecreta"
+        [ngClass]="{'is-invalid': registerForm.get('palavraSecreta')?.errors && registerForm.get('palavraSecreta')?.touched}">
+        <div class="invalid-feedback">
+          Campo Obrigatório!
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="dicaSecreta" class="form-label">Dica Palavra Segurança:</label>
+        <input type="text" class="form-control is-invalid" id="dicaSecreta" placeholder="Dica para lembrar da palavra secreta" formControlName="dicaSecreta"
+        [ngClass]="{'is-invalid': registerForm.get('dicaSecreta')?.errors && registerForm.get('dicaSecreta')?.touched}">
+        <div class="invalid-feedback">
+          Campo Obrigatório!
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4 text-end">
+          <button type="submit" class="btn btn-outline-secondary me-3" (click)="back()">voltar</button>
+          <button type="submit" class="btn btn-outline-primary" [disabled]='!registerForm.valid' (click)="updateUser()">Salvar</button>
+        </div>
+      </div>
+    </div>    
+  </div>
+  <!-- <p>Form Status: {{ registerForm.status }}</p> -->
+</form>

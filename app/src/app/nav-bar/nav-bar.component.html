@@ -1,16 +1,16 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <!-- <a class="navbar-brand" href="#">
-        <img src="src\img\Reflectare.jpeg" alt="" width="20px" height="20px"/>
-      </a> -->
+      <a class="navbar-brand" href="#">
+        <img class="logo-img" src="/assets/img/reflectare_logo.png" alt="">
+      </a>
       <a class="navbar-brand" href="#">Home</a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li *ngIf="userLogado.perfil != 'Aluno'" class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="/cadastro">Cadastro</a>
+        <li *ngIf="userLogado.perfil.codigo != 0" class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/cadastro">Cadastrar Palavra</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#"></a>
@@ -18,14 +18,43 @@
         <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"></a>
         </li>
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span>Olá </span>
+            <span class="me-1 fw-bold">{{userLogado.usuario.nome}}</span>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Editar Perfil</a></li>
+            <li><a class="dropdown-item" href="#">Sair</a></li>
+             <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> -->
       </ul>
-      <form class="d-flex">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span>Olá </span>
+            <span class="material-icons-outlined">
+              account_circle
+              </span>
+            <span class="me-1 fw-bold">{{userLogado.nome}}</span>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" (click)="editaPerfil()">Editar Perfil</a></li>
+            <li><a class="dropdown-item" (click)="logout()">Sair</a></li>
+            <!-- <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+          </ul>
+        </li>
+      </ul>
+      <!-- <form class="d-flex">
         <span class="me-1">Olá </span>
-        <span class="me-1 fw-bold">{{userLogado.nome}}</span>
-        <!-- <span class="material-icons-outlined">account_circle</span> -->
-        <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button> -->
-      </form>
+        <span class="me-1 fw-bold">{{userLogado.usuario.nome}}</span>
+        <span class="material-icons-outlined">account_circle</span>
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form> -->
     </div>
   </div>
 </nav>

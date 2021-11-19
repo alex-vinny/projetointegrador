@@ -27,7 +27,7 @@ namespace ProjetoIntegrador.Api.Services
                 var palavra = await GetPalavraByValor(valor);
 
                 if (palavra == null)
-                    return Null($"Palavra: {valor} não cadastrada.");
+                    return Null($"Palavra: {valor} nï¿½o cadastrada.");
 
                 return palavra.MakeResponse();
             }
@@ -45,24 +45,30 @@ namespace ProjetoIntegrador.Api.Services
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<ResponseDto> GetAll(PalavraDto request)
+        public async Task<List<ResponseDto>> GetAll(PalavraDto request)
         {
             try
             {
                 var query = _context.Palavras.AsQueryable();
+                query = query.Include(c => c.Categoria);
+
+                if(request.InformarCategoria && string.IsNullOrEmpty(request.Categoria))
+                {
+                    return new[]
+                    {
+                        ErrorResponse(ErrorTypes.Null, "ObrigatÃ³rio informar a categoria para palavra.")
+                    }
+                    .ToList();
+                }
 
                 if (!string.IsNullOrEmpty(request.Categoria))
                 {
                     request.Categoria = request.Categoria.RemoverAcentos(true);
-                    query = query                            
-                            .Include(c => c.Categoria)
-                            .Where(c => c.Categoria.DescricaoSemAcento.Equals(request.Categoria));
+                    query = query.Where(c => c.Categoria.DescricaoSemAcento.Equals(request.Categoria));
 
                     if (request.SerieEscolar > 0)                    
                         query = query.Where(c => c.SerieEscolar == request.SerieEscolar);                    
-                }
-
-                query = query.Take(Constants.TAMANHO_PAGINA);
+                }              
 
                 bool ordenarAcendent = (new Random().Next(0, 1) == 1 ? true : false);
 
@@ -71,26 +77,31 @@ namespace ProjetoIntegrador.Api.Services
                 else
                     query = query.OrderBy(c => c.ValorSemAcento);
 
-                var resultado = query
-                                    .Select(c => c.MakeResponse())
-                                    //.Distinct(new PalavraComparador())
-                                    .Take(request.QtdItens);
+                var resultado = query.Select(c => c.MakeResponse());
 
                 var palavras = await resultado.ToListAsync();
 
                 if (palavras.Any())
-                    return new ResponseDto
-                    {
-                        { "palavras", palavras }
-                    };
+                {
+                    if(request.QtdItens == Constants.MAX_PALAVRAS || request.QtdItens >= palavras.Count)
+                        return palavras;
 
-                return ErrorResponse(ErrorTypes.Null,
+                    return palavras.TakeAfterShuffle(request.QtdItens);
+                }
+
+                var erro = ErrorResponse(ErrorTypes.Null,
                         $"Nenhum palavra cadastrada para categoria: {request.Categoria}",
-                        request.SerieEscolar > 0 ? $"Nenhum palavra cadastrada para série escolar: {request.SerieEscolar}" : "");
+                        request.SerieEscolar > 0 ? $"Nenhum palavra cadastrada para sï¿½rie escolar: {request.SerieEscolar}" : "");
+                
+                return new[]
+                {
+                    erro
+                }
+                .ToList();
             }
             catch (Exception ex)
             {
-                return Exception(ex);   
+                return new[] { Exception(ex) }.ToList();
             }
         }
         
@@ -102,7 +113,7 @@ namespace ProjetoIntegrador.Api.Services
                 if (palavra != null)
                     return palavra.MakeResponse();
 
-                return Null($"Palavra com ID: {id} não cadastrada.");
+                return Null($"Palavra com ID: {id} nï¿½o cadastrada.");
             }
             catch (Exception ex)
             {
@@ -117,21 +128,18 @@ namespace ProjetoIntegrador.Api.Services
                 var palavra = await GetPalavraByValor(valorPalavra);
 
                 if (palavra == null)
-                    return Null($"Palavra não localizada para atualização: {valorPalavra}");
+                    return Null($"Palavra nï¿½o localizada para atualizaï¿½ï¿½o: {valorPalavra}");
 
                 var categoria = await GetCategoria(descricaoCategoria);
 
                 if (categoria == null)
-                    return Null($"Categoria não localizada para atualização: {descricaoCategoria}");
+                    return Null($"Categoria nï¿½o localizada para atualizaï¿½ï¿½o: {descricaoCategoria}");
 
                 palavra.Categoria = categoria;
 
                 await UpdatePalavra(palavra.ID, palavra);
 
-                return new ResponseDto
-                {
-                    { "palavra", palavra.MakeResponse() }
-                };
+                return palavra.MakeResponse();
             }
             catch (Exception ex)
             {
@@ -145,7 +153,7 @@ namespace ProjetoIntegrador.Api.Services
             {
                 var palavra = await GetPalavraByValor(request.Palavra);
                 if (palavra == null)
-                    return Null($"Palavra não localizada para atualização: {request.Palavra}");
+                    return Null($"Palavra nï¿½o localizada para atualizaï¿½ï¿½o: {request.Palavra}");
 
                 palavra.Dica = string.IsNullOrEmpty(request.DicaPalavra) ? palavra.Dica : request.DicaPalavra;
                 palavra.DicaSemAcento = palavra.Dica.RemoverAcentos();
@@ -183,22 +191,19 @@ namespace ProjetoIntegrador.Api.Services
             try
             {
                 if (string.IsNullOrEmpty(request.Palavra))
-                    return Error("Obrigatório informar a palavra.");
+                    return Error("Obrigatï¿½rio informar a palavra.");
 
                 if (string.IsNullOrEmpty(request.DicaPalavra))
-                    return Error("Obrigatório informar uma dica.");
+                    return Error("Obrigatï¿½rio informar uma dica.");
 
                 if (string.IsNullOrEmpty(request.Categoria))
-                    return Error("Obrigatório informar uma categoria.");
+                    return Error("Obrigatï¿½rio informar uma categoria.");
 
                 var palavra = await GetPalavraByValor(request.Palavra);
                 
                 if (palavra != null)
                 {
-                    return new ResponseDto
-                    {
-                        { "palavra", palavra.MakeResponse() }
-                    };
+                    return palavra.MakeResponse();
                 }
                 else
                 {
@@ -252,7 +257,7 @@ namespace ProjetoIntegrador.Api.Services
                 if(model != null)
                     return await Delete(model.ID);
 
-                return Null("Não encontrado");
+                return Null("Nï¿½o encontrado");
             }
             catch (Exception ex)
             {
@@ -270,7 +275,7 @@ namespace ProjetoIntegrador.Api.Services
                     return ResponseDto.Ok();
                 }
 
-                return Null("Não encontrado");
+                return Null("Nï¿½o encontrado");
             }
             catch (Exception ex)
             {

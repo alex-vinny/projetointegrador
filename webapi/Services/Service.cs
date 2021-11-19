@@ -13,7 +13,7 @@ namespace ProjetoIntegrador.Api.Services
 
         protected ResponseDto Exception(Exception ex)
         {
-            return MakeErrorResponse(ErrorTypes.BadRequest, ex.Message);
+            return MakeErrorResponse(ErrorTypes.BadRequest, ex.ToString());
         }
 
         protected ResponseDto Error(string msg)
