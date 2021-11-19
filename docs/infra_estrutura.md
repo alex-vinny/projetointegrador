@@ -19,6 +19,8 @@ De dentro do container executar os comandos para criar o projeto:
 #### Javascript Angular
 Container para criar o novo projeto da spa em **angular**:
 > `$ docker run -it --rm -v ${PWD}:/app --workdir /app node /bin/bash`
+Comando para executar o container já realizando binding da porta:
+`$ docker run -it --rm -p 4200:4200 -v ${PWD}:/app --workdir /app node /bin/bash`
 
 De dentro do container executar os comandos para criar o projeto:
 > `$ ng new app`
@@ -40,5 +42,8 @@ Outro exemplo que funcionou:
 * Testar pelo navegador: Acessar [localhost](http://localhost:5000/swagger/index.html).
 * Comandos de buld ***Javascript***
 > `$ docker build -t angularapp .`
-`$ docker run -d --rm -p 8080:80 -e PORT=80 --name myapp angularapp`
+Acessar o terminal da imagem para verificar o resultado do build:
+`$ docker run -ti --rm -p 8080:80 --name myapp angularapp /bin/bash`
+Rodar a imagem compilada no nginx:
+`$ docker run -d --rm -p 8080:80 --name myapp angularapp`
 * Testar pelo navegador: Acessar [localhost](http://localhost:8080/)

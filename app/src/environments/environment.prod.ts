@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  urlWebService: document.location.protocol + '//' + document.location.host + '/',
+  //urlWebService: '$API_URL',
+  urlWebService: document.location.protocol + '//' + document.location.host,
   BaseUrl: '/api'
 };
