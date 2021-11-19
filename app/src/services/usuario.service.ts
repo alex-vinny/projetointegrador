@@ -28,8 +28,8 @@ export class UsuarioService {
     return this.http.post(this.url, usuario);
   }
 
-  putUsuario(usuario: Usuario){
-    return this.http.put(this.url, usuario);
+  putUsuario(email: string, usuario: any){
+    return this.http.put(this.url + '/' + email, usuario);
   }
 
   setUser(ddsUsuario: Usuario){

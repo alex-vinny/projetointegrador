@@ -17,9 +17,12 @@ import { AuthComponent } from './auth/auth.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
+import { ModalComponent } from './modal/modal.component';
+import { RankingComponent } from './ranking/ranking.component';
+import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.component';
 
 @NgModule({
-  declarations: [							
+  declarations: [									
       AppComponent,
       LoginComponent,
       CadastroComponent,
@@ -27,7 +30,10 @@ import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.componen
       NovoUsuarioComponent,
       AuthComponent,
       NavBarComponent,
-      EditarUsuarioComponent
+      EditarUsuarioComponent,
+      ModalComponent,
+      RankingComponent,
+      EsqueceuSenhaComponent
    ],
   imports: [
     BrowserModule,

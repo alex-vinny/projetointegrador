@@ -1,3 +1,4 @@
+<app-modal *ngIf="showModal"></app-modal>
 <form [formGroup]="registerForm">
   <div class="container mt-5">
     <div class="col-8 border rounded p-3 m-auto">
@@ -61,8 +62,16 @@
       </div>
       <div class="mb-3">
         <label for="palavraSecreta" class="form-label">Palavra Segurança:</label>
-        <input type="text" class="form-control is-invalid" id="palavraSecreta" placeholder="Nome" formControlName="palavraSecreta"
+        <input type="text" class="form-control is-invalid" id="palavraSecreta" placeholder="Insira a palavra secreta" formControlName="palavraSecreta"
         [ngClass]="{'is-invalid': registerForm.get('palavraSecreta')?.errors && registerForm.get('palavraSecreta')?.touched}">
+        <div class="invalid-feedback">
+          Campo Obrigatório!
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="dicaSecreta" class="form-label">Dica Palavra Segurança:</label>
+        <input type="text" class="form-control is-invalid" id="dicaSecreta" placeholder="Dica para lembrar da palavra secreta" formControlName="dicaSecreta"
+        [ngClass]="{'is-invalid': registerForm.get('dicaSecreta')?.errors && registerForm.get('dicaSecreta')?.touched}">
         <div class="invalid-feedback">
           Campo Obrigatório!
         </div>
@@ -71,7 +80,7 @@
         <div class="col-8"></div>
         <div class="col-4 text-end">
           <button type="submit" class="btn btn-outline-secondary me-3" (click)="back()">voltar</button>
-          <button type="submit" class="btn btn-outline-primary" [disabled]='!registerForm.valid' (click)="insertUser()">Salvar</button>
+          <button type="submit" class="btn btn-outline-primary" [disabled]='!registerForm.valid' (click)="updateUser()">Salvar</button>
         </div>
       </div>
     </div>    

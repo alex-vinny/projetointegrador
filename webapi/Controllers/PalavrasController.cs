@@ -29,9 +29,16 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPalavras()
         {
+            return await GetPalavras(Constants.MAX_PALAVRAS);
+        }
+
+        // GET: api/Palavras/100
+        [HttpGet("{qtd}")]
+        public async Task<IActionResult> GetPalavras(int qtd)
+        {
             var dto = new PalavraDto
-            {                
-                QtdItens = Constants.MAX_PALAVRAS
+            {
+                QtdItens = qtd
             };
 
             return this.SendResponseLista(await service.GetAll(dto));
@@ -51,6 +58,7 @@ namespace api.Controllers
             var dto = new PalavraDto
             {
                 Categoria = categoria,
+                InformarCategoria = true,
                 QtdItens = (qtd <= 0 ? Constants.QTD_PALAVRAS : qtd),
                 SerieEscolar = serie
             };
