@@ -17,6 +17,8 @@ import { AuthComponent } from './auth/auth.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
+import { HomeEscolhaJogoComponent } from './home-escolha-jogo/home-escolha-jogo.component';
+import { JogoDaMemoriaComponent } from './jogo-da-memoria/jogo-da-memoria.component';
 
 @NgModule({
   declarations: [							
@@ -27,7 +29,9 @@ import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.componen
       NovoUsuarioComponent,
       AuthComponent,
       NavBarComponent,
-      EditarUsuarioComponent
+      EditarUsuarioComponent,
+      HomeEscolhaJogoComponent,
+      JogoDaMemoriaComponent
    ],
   imports: [
     BrowserModule,

@@ -23,8 +23,8 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsuarios()
         {
-            object o = this.SendResponseLista(await service.GetAll());
-            return o;
+            // object o = this.SendResponseLista(await service.GetAll());
+            return this.SendResponseLista(await service.GetAll());
         }
 
         // GET: api/Usuarios/5
