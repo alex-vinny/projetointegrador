@@ -20,9 +20,10 @@ import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.componen
 import { ModalComponent } from './modal/modal.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.component';
+import { HomeJogoMemoriaComponent } from './home-jogo-memoria/home-jogo-memoria.component';
 
 @NgModule({
-  declarations: [									
+  declarations: [										
       AppComponent,
       LoginComponent,
       CadastroComponent,
@@ -33,7 +34,8 @@ import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.componen
       EditarUsuarioComponent,
       ModalComponent,
       RankingComponent,
-      EsqueceuSenhaComponent
+      EsqueceuSenhaComponent,
+      HomeJogoMemoriaComponent
    ],
   imports: [
     BrowserModule,
