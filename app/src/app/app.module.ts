@@ -21,9 +21,10 @@ import { ModalComponent } from './modal/modal.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.component';
 import { HomeJogoMemoriaComponent } from './home-jogo-memoria/home-jogo-memoria.component';
+import { HomePalavraCruzadaComponent } from './home-palavra-cruzada/home-palavra-cruzada.component';
 
 @NgModule({
-  declarations: [										
+  declarations: [											
       AppComponent,
       LoginComponent,
       CadastroComponent,
@@ -35,7 +36,8 @@ import { HomeJogoMemoriaComponent } from './home-jogo-memoria/home-jogo-memoria.
       ModalComponent,
       RankingComponent,
       EsqueceuSenhaComponent,
-      HomeJogoMemoriaComponent
+      HomeJogoMemoriaComponent,
+      HomePalavraCruzadaComponent
    ],
   imports: [
     BrowserModule,
