@@ -23,7 +23,7 @@ namespace ProjetoIntegrador.Api.Extensions
 
         public static List<T> TakeAfterShuffle<T>(this List<T> list, int qtd)
         {
-            if(list.Any() && list.Count > qtd)
+            if (list.Any() && list.Count > qtd)
             {
                 list.Shuffle();
                 return list.Take(qtd).ToList();

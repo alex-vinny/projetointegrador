@@ -6,6 +6,7 @@ using ProjetoIntegrador.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BaseRequest = ProjetoIntegrador.Api.Dtos.RequestDto;
 
@@ -25,17 +26,21 @@ namespace ProjetoIntegrador.Api.Services
             return await GetAll(BaseRequest.DefaultPagination);
         }
 
-        private async Task<List<ResponseDto>> GetAll(BaseRequest dto)
+        private async Task<List<ResponseDto>> GetAll(BaseRequest dto, Expression<Func<Categoria, bool>> @where = null)
         {
             try
             {
                 var query = _context.Categorias
                     .OrderBy(c => c.Descricao)
                     .Skip(dto.Skip.Value)
-                    .Take(dto.Take.Value)
-                    .Select(c => c.MakeResponse());
+                    .Take(dto.Take.Value);
 
-                var categorias = await query.ToListAsync();
+                if(@where != null)
+                    query = query.Where(@where);
+
+                var result = query.Select(c => c.MakeResponse());
+
+                var categorias = await result.ToListAsync();
 
                 if (!categorias.Any())
                     return new[] { Null("Nenhuma categoria cadastrada.") }.ToList();
@@ -57,9 +62,30 @@ namespace ProjetoIntegrador.Api.Services
         {
             return await _context.Categorias
                     .Where(c => c.Descricao != null)
-                    .ToArrayAsync(); 
+                    .ToArrayAsync();
         }
-        
+
+        public async Task<ResponseDto> GetByDescricao(string descricao)
+        {
+            try
+            {
+                descricao = descricao.RemoverAcentos(true);
+                var categoria = await GetAll(BaseRequest.DefaultPagination, c => c.DescricaoSemAcento.Equals(descricao));
+                if (categoria != null)
+                {
+                    return categoria.First();
+                }
+                else
+                {
+                    return Null($"Categoria: {descricao} n�o localizado.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
         public async Task<ResponseDto> Get(int id)
         {
             try
@@ -117,6 +143,6 @@ namespace ProjetoIntegrador.Api.Services
             }
 
             return model.MakeResponse();
-        }     
+        }
     }
 }
