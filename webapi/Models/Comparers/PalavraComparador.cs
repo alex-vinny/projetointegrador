@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ProjetoIntegrador.Api.Models
+namespace ProjetoIntegrador.Api.Models.Comparers
 {
     public class PalavraComparador : IEqualityComparer<Palavra>
     {

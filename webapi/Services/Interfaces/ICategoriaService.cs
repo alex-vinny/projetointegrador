@@ -11,5 +11,6 @@ namespace ProjetoIntegrador.Api.Services
         Task<Categoria[]> GetAllCategoria();
         Task<ResponseDto> Get(int id);    
         Task<ResponseDto> Save(CategoriaDto request);
+        Task<ResponseDto> GetByDescricao(string descricao);
     }
 }

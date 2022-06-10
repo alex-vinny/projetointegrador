@@ -28,14 +28,19 @@ namespace ProjetoIntegrador.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
             });
-            
 
             // Inje��o de depend�ncias das Services
-            services.AddScoped<ICategoriaService, CategoriaService>();
-            services.AddScoped<IPalavraService, PalavraService>();
-            services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<ISessaoService, SessaoService>();
+            services
+                .AddScoped<ICategoriaService, CategoriaService>()
+                .AddScoped<IPalavraService, PalavraService>()
+                .AddScoped<IUsuarioService, UsuarioService>()
+                .AddScoped<ISessaoService, SessaoService>()
+                .AddScoped<ISessaoService, SessaoService>()
+                .AddScoped<IImagemService, ImagemService>()
+                .AddSingleton<Configurator>();
+
             services.AddCors();
+            services.AddHttpClient();
 
             // services.AddCors(options =>
             // {
@@ -84,8 +89,6 @@ namespace ProjetoIntegrador.Api
             {
                 endpoints.MapControllers();
             });
-
-            
         }
 
         /* This method gets called by the runtime. Use this method to add services to the container.
