@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace api.Controllers
 {
+    /// <summary>
+    /// Controller para expor recursos de imagens.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ImagensController : ControllerBase
@@ -17,7 +20,12 @@ namespace api.Controllers
             service = context;
         }
 
-        // GET: api/Imagens/
+        /// <summary>
+        /// GET: api/Imagens/
+        /// </summary>
+        /// <param name="categoria">Opcional: Código ou descrição da Categoria.</param>
+        /// <param name="quantidade">Opcional: Valor padrão é 20.</param>
+        /// <returns>Lista de imagens.</returns>
         [HttpGet]
         public async Task<IActionResult> GetlImagens(string categoria, int? quantidade = null)
         {
