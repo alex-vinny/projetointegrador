@@ -37,6 +37,8 @@ namespace ProjetoIntegrador.Api
                 .AddScoped<ISessaoService, SessaoService>()
                 .AddScoped<ISessaoService, SessaoService>()
                 .AddScoped<IImagemService, ImagemService>()
+                .AddScoped<ITipoJogoService, TipoJogoService>()
+                .AddScoped<IPontucaoService, PontuacaoService>()
                 .AddSingleton<Configurator>();
 
             services.AddCors();
