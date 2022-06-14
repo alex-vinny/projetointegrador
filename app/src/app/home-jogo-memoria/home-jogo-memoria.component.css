@@ -1,50 +1,88 @@
 .btn-iniciar{
     margin-top: 1.8rem;
 }
-
-/* Jogo */
-
-.memory-game {
-    height: 480px;
-    width: 640px;
+.container {
     margin: auto;
+    display:inline-flexbox;    
+}
+
+.jogo-memoria {
+    height: 100%;
+    /* width: 960px; */
+    padding: 5px;
+    background-color: rgb(228, 241, 243);
+    margin: 10px auto auto auto;
+    border-radius: 15px;
     display: flex;
     flex-wrap: wrap;
-    perspective: 1000px;
+    perspective: 1000px; /* Perspectiva no eixo z. Quanto maior, melhor o efeito da perspectiva */
 }
 
-.card {
-    height: calc(33.333% - 10px);
-    width: calc(25% - 10px);
+.carta {    
+    /* height: calc(25% - 10px);*/
+    width: calc(20% - 10px);
+    height: 180px;
+    /* width: 155px; */
     margin: 5px;
     position: relative;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    border-radius: 15px; 
+    box-shadow: 3px 3px 3px rgba(0,0,0,.3);
     cursor: pointer;
     transform: scale(1);
-    transform-style: preserve-3d;
-    transition: transform .9s;
+    transform-style: preserve-3d; /* Adiciona perspectiva 3d. Dessa forma consegue exibir o verso */
+    transition: transform .9s; /* Controla a velocidade do efeito de girar */
 }
 
-.card:active {
+/* Reduz o tamanho da carta quando é clicado */
+.carta:active{
     transform: scale(0.97);
     transition: transform .2s;
 }
 
-.card-front,
-.card-back {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    position: absolute;
-    border-radius: 5px;
-    background: rgb(92, 187, 182);
-    backface-visibility: hidden;
+.desabilitado {
+    pointer-events: none;
 }
 
-.card-front {
+.carta-frente,
+.carta-verso {    
+  width: 100%;
+  height: 100%;  
+  position: absolute;  
+  border-radius: 15px;  
+  backface-visibility: hidden; /* Esconde o "verso" do elemento quando girar a carta */
+}
+
+/* Deixa a frente da carta "virada para trás". 
+Dessa forma, quando girar a div, essa parte ficará voltada para frente
+enquanto o elemento que contém o verso fica voltado para trás:
+*/
+.carta-frente {
     transform: rotateY(180deg);
 }
 
-.card.flip {
+/* Animação da rotação */
+.flip {
     transform: rotateY(180deg);
+}
+
+.legenda {
+    margin: 0 auto 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: xx-large;
+    font-weight: bolder;
+}
+
+.tempo {
+    font-size: 45px;
+    font-weight: 900;
+}
+
+.pontuacao {
+    text-align: center;
+    padding-right: 30px;
+    margin-top: -5px;
+    display: block;   
+    height: 10px;
 }

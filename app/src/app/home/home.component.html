@@ -1,14 +1,24 @@
 <app-modal *ngIf="showModal"></app-modal>
 <app-nav-bar class="fixed-top" [showBtnCadastrarPalavras]="false"></app-nav-bar>
 <div class="container-fluid mt-nav text-center">
+
     <div class="m-auto">
-        <div class="btn-home d-inline-block shadow p-3 mr-5" (click)="navToPalavraCruada()">
-            <img src="" alt="">
-            <p class="fs-4">Palavras <br> Cruzadas</p>
+        <div class="row">
+            <h1 class="h1 mt-5">Escolha o jogo</h1>
         </div>
-        <div class="btn-home d-inline-block shadow p-3" (click)="navToJogoMemoria()">
-            <img src="" alt="">
-            <p class="fs-4">Jogo da <br> Memória</p>
+        <div class="btn-home d-inline-block shadow p-1 mr-5" (click)="navToPalavraCruada()">
+            <img class="img-home-btn" src="../../assets/img/img-home-jogo-palavra_cruzada.png" alt="">
+            <p class="fs-4 mt-3">Palavras <br> Cruzadas</p>
+            <!-- <span class="material-symbols-outlined icon-btn">
+                saved_search
+                </span> -->
+        </div>
+        <div class="btn-home d-inline-block shadow p-1" (click)="navToJogoMemoria()">
+            <img class="img-home-btn" src="../../assets/img/img-home-jogo-memoria.png" alt="">
+            <p class="fs-4 mt-3">Jogo da <br> Memória</p>
+            <!-- <span class="material-symbols-outlined icon-btn">
+                psychology
+                </span> -->
         </div>
     </div>
 
