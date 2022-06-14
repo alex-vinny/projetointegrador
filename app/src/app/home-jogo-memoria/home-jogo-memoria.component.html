@@ -33,6 +33,10 @@
                     <span class="material-icons-outlined">sports_esports</span>
                     <span>Novo Jogo</span>
                 </button>
+                <button *ngIf="!showStartGame" id="iniciar" type="submit" class="btn btn-outline-warning btn-iniciar" (click)="finalizarJogo()">
+                    <span class="material-icons-outlined">close</span>
+                    <span>Finalizar</span>
+                </button>
             </div>
         </div>
     </div>
@@ -48,7 +52,7 @@
                 </div>
                 <div class="col-4 text-center mt-3 d-inline-block">
                     <p>
-                        <span class="material-symbols-outlined">timer</span>
+                        <span class="material-symbols-outlined">ads_click</span>
                         Tentativas
                     </p>
                     <p>{{ jogadas }}</p> 
@@ -58,26 +62,21 @@
                         <span class="material-symbols-outlined">thumb_up</span>
                         Acertos
                     </p>
-                    <p>{{ pontuacao }}</p>
-                </div>
-                
-                
-                
-                
-                
-                
+                    <p>{{ totalAcerto }}</p>
+                </div>            
+
                 <div class="legenda"> 
                   <!-- <button type="button" (click)="reiniciarJogo()">Reiniciar jogo</button>   -->
-                  <p class="tempo" *ngIf="!fimDeJogo; else fim">{{ tempoRestante }}</p> 
+                  <!-- <p class="tempo" *ngIf="!fimDeJogo; else fim">{{ tempoRestante }}</p>  -->
                   
                   <ng-template #fim>
                     <p class="tempo">{{ fimDeJogoMsg }}</p>
                   </ng-template>
                   
-                  <p>Tentativas: {{ jogadas }}</p>    
+                  <!-- <p>Tentativas: {{ jogadas }}</p>     -->
                 </div>
                   
-                <p class="pontuacao">{{ pontuacao }}</p>  
+                <!-- <p class="pontuacao">{{ pontuacao }}</p>   -->
                 
                 <div class="jogo-memoria" *ngIf="cartas">    
                     <div *ngFor="let carta of cartas" 

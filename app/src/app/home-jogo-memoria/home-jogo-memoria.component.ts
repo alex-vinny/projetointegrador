@@ -1,4 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { interval } from 'rxjs/internal/observable/interval';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Carta } from 'src/models/Carta';
@@ -12,11 +13,12 @@ import { CategoriaService } from 'src/services/categoria.service';
 })
 export class HomeJogoMemoriaComponent implements OnInit {
   showBtnCadastrarPalavras: boolean;
-  showModal = false;
+  showModal = true;
   showStartGame = true;
   arrCategoria: Categoria[] = [];
   hasFlippedCard:boolean;
-  lockBoard: boolean
+  lockBoard: boolean;
+  arrInfoPontuacao: any;
 
   TEMPO = 0;
   cartas: Array<Carta> = [];  
@@ -28,6 +30,7 @@ export class HomeJogoMemoriaComponent implements OnInit {
   tempoInicial: number = this.TEMPO;
   tempoRestante: number = this.TEMPO;
   pontuacao: string = '';
+  totalAcerto: number = 0;
   contagem: Subscription;
   fimDeJogo: boolean = false;
   fimDeJogoMsg: string = '';
@@ -36,40 +39,13 @@ export class HomeJogoMemoriaComponent implements OnInit {
   
   constructor(
     private categoriService: CategoriaService,
+    private alerts: ToastrService,
   ) { } 
   
   ngOnInit(): void {          
     // this.cartas = CARTAS.concat(CARTAS.map(carta => ({...carta})));
+    this.showModal = true;
     this.getAllCategorias();
-    
-    this.cartas = [
-      { id: 1, img: "../../assets/img/bulbasaur.jpg", estaVirada: false },
-      { id: 1, img: "../../assets/img/bulbasaur.jpg", estaVirada: false },
-      { id: 2, img: "../../assets/img/charmander.jpg", estaVirada: false },
-      { id: 2, img: "../../assets/img/charmander.jpg", estaVirada: false },
-      { id: 3, img: "../../assets/img/clefairy.jpg", estaVirada: false },
-      { id: 3, img: "../../assets/img/clefairy.jpg", estaVirada: false },
-      { id: 4, img: "../../assets/img/eevee.jpg", estaVirada: false },
-      { id: 4, img: "../../assets/img/eevee.jpg", estaVirada: false },
-      { id: 5, img: "../../assets/img/growlithe.jpg", estaVirada: false },
-      { id: 5, img: "../../assets/img/growlithe.jpg", estaVirada: false }   
-      // { id: 6, img: "../../assets/img/jigglypuff.jpg", estaVirada: false },
-      // { id: 6, img: "../../assets/img/jigglypuff.jpg", estaVirada: false },
-      // { id: 7, img: "../../assets/img/meowth.jpg", estaVirada: false },
-      // { id: 7, img: "../../assets/img/meowth.jpg", estaVirada: false },
-      // { id: 8, img: "../../assets/img/oddish.jpg", estaVirada: false },
-      // { id: 8, img: "../../assets/img/oddish.jpg", estaVirada: false },
-      // { id: 9, img: "../../assets/img/pikachu.jpg", estaVirada: false },
-      // { id: 9, img: "../../assets/img/pikachu.jpg", estaVirada: false },
-      // { id: 10, img: "../../assets/img/psyduck.jpg", estaVirada: false },
-      // { id: 10, img: "../../assets/img/psyduck.jpg", estaVirada: false },
-      // { id: 11, img: "../../assets/img/squirtle.jpg", estaVirada: false },
-      // { id: 11, img: "../../assets/img/squirtle.jpg", estaVirada: false },
-      // { id: 12, img: "../../assets/img/vulpix.jpg", estaVirada: false },
-      // { id: 12, img: "../../assets/img/vulpix.jpg", estaVirada: false }
-    ]
-    
- 
   }
   
   ngOnDestroy(): void {
@@ -108,16 +84,56 @@ export class HomeJogoMemoriaComponent implements OnInit {
   gameOver(ganhou: boolean): void {
     this.pararContagem(); 
     
-    if (ganhou) 
-      this.fimDeJogoMsg = 'Você ganhou! =D';
-    else
+    if (ganhou){
+      // this.fimDeJogoMsg = 'Você ganhou! =D';
+      this.alerts.success("Você ganhou!!!",'Parabéns!', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })
+
+    }
+    else {
       this.fimDeJogoMsg = 'Você perdeu... =(';
+      this.alerts.warning('Não foi dessa vez!','Que pena!', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })
+    }
 
     this.fimDeJogo = true;
     this.travarCartas = true;
+    this.showStartGame = true;
   }
  
   iniciarJogo() {
+    this.cartas = [
+      { id: 1, img: "../../assets/img/bulbasaur.jpg", estaVirada: false },
+      { id: 1, img: "../../assets/img/bulbasaur.jpg", estaVirada: false },
+      { id: 2, img: "../../assets/img/charmander.jpg", estaVirada: false },
+      { id: 2, img: "../../assets/img/charmander.jpg", estaVirada: false },
+      { id: 3, img: "../../assets/img/clefairy.jpg", estaVirada: false },
+      { id: 3, img: "../../assets/img/clefairy.jpg", estaVirada: false },
+      { id: 4, img: "../../assets/img/eevee.jpg", estaVirada: false },
+      { id: 4, img: "../../assets/img/eevee.jpg", estaVirada: false },
+      { id: 5, img: "../../assets/img/growlithe.jpg", estaVirada: false },
+      { id: 5, img: "../../assets/img/growlithe.jpg", estaVirada: false },   
+      { id: 6, img: "../../assets/img/jigglypuff.jpg", estaVirada: false },
+      { id: 6, img: "../../assets/img/jigglypuff.jpg", estaVirada: false },
+      { id: 7, img: "../../assets/img/meowth.jpg", estaVirada: false },
+      { id: 7, img: "../../assets/img/meowth.jpg", estaVirada: false },
+      { id: 8, img: "../../assets/img/oddish.jpg", estaVirada: false },
+      { id: 8, img: "../../assets/img/oddish.jpg", estaVirada: false },
+      { id: 9, img: "../../assets/img/pikachu.jpg", estaVirada: false },
+      { id: 9, img: "../../assets/img/pikachu.jpg", estaVirada: false },
+      { id: 10, img: "../../assets/img/psyduck.jpg", estaVirada: false },
+      { id: 10, img: "../../assets/img/psyduck.jpg", estaVirada: false },
+      { id: 11, img: "../../assets/img/squirtle.jpg", estaVirada: false },
+      { id: 11, img: "../../assets/img/squirtle.jpg", estaVirada: false },
+      { id: 12, img: "../../assets/img/vulpix.jpg", estaVirada: false },
+      { id: 12, img: "../../assets/img/vulpix.jpg", estaVirada: false }
+    ] 
+    
+    this.showStartGame = false;
     this.TEMPO = parseInt(this.qtdSelect) * 20;
     this.tempoInicial = this.TEMPO;
     this.tempoRestante = this.TEMPO;
@@ -132,7 +148,34 @@ export class HomeJogoMemoriaComponent implements OnInit {
       this.embaralhaCartas();       
       this.travarCartas = false;
       this.iniciarContagem();
+      this.alerts.info("Jogo iniciado!!!",'Oba!', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })
     }, 500);
+
+  }
+
+  finalizarJogo(){
+    
+    // this.arrInfoPontuacao = {
+    //   qtdTentativas: jogadas,
+    //   qtdAcertos: totalAcerto
+    // }
+    
+    
+    
+    
+    
+    this.pararContagem();
+    this.fimDeJogo = true;
+    this.travarCartas = true;
+    this.showStartGame = true;
+
+    this.alerts.warning("Jogo Finalizado!!!",'Atenção!', {
+      positionClass: 'toast-top-full-width',
+      timeOut: 8000
+    })
   }
 
   embaralhaCartas(): void {
@@ -181,6 +224,7 @@ export class HomeJogoMemoriaComponent implements OnInit {
     if(this.primeiraCarta.id === this.segundaCarta.id) {  
       this.travarCartas = false;        
       this.atualizarPontuacao(+10);
+      this.totalAcerto++;
 
       if(this.cartas.some(carta => carta.estaVirada === false)) {
         return;
