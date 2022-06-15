@@ -31,12 +31,13 @@
     transform: scale(1);
     transform-style: preserve-3d; /* Adiciona perspectiva 3d. Dessa forma consegue exibir o verso */
     transition: transform .9s; /* Controla a velocidade do efeito de girar */
+    border: solid 9px #3333ff;
 }
 
 /* Reduz o tamanho da carta quando é clicado */
 .carta:active{
     transform: scale(0.97);
-    transition: transform .2s;
+    transition: transform .2s;    
 }
 
 .desabilitado {
@@ -57,12 +58,13 @@ Dessa forma, quando girar a div, essa parte ficará voltada para frente
 enquanto o elemento que contém o verso fica voltado para trás:
 */
 .carta-frente {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg);    
 }
 
 /* Animação da rotação */
 .flip {
     transform: rotateY(180deg);
+    border: solid 9px #4dff4d;
 }
 
 .legenda {
@@ -85,4 +87,8 @@ enquanto o elemento que contém o verso fica voltado para trás:
     margin-top: -5px;
     display: block;   
     height: 10px;
+}
+.align-super{
+    vertical-align: super;
+    margin-left: 3px;
 }

@@ -46,23 +46,23 @@
                 <div class="col-4 text-center mt-3 d-inline-block">
                     <p>
                         <span class="material-symbols-outlined">timer</span>
-                        Tempo
+                        <span class="align-super">Tempo</span>
                     </p>
-                    <p>{{ tempoRestante }}</p>
+                    <p class="mb-0">{{ tempoRestante }}</p>
                 </div>
                 <div class="col-4 text-center mt-3 d-inline-block">
                     <p>
                         <span class="material-symbols-outlined">ads_click</span>
-                        Tentativas
+                        <span class="align-super">Tentativas</span>
                     </p>
-                    <p>{{ jogadas }}</p> 
+                    <p class="mb-0">{{ jogadas }}</p> 
                 </div>
                 <div class="col-4 text-center mt-3 d-inline-block">
                     <p>
                         <span class="material-symbols-outlined">thumb_up</span>
-                        Acertos
+                        <span class="align-super">Acertos</span>
                     </p>
-                    <p>{{ totalAcerto }}</p>
+                    <p class="mb-0">{{ totalAcerto }}</p>
                 </div>            
 
                 <div class="legenda"> 
@@ -83,7 +83,7 @@
                         (click)="viraCarta(carta)" 
                         [ngClass]="[(carta.estaVirada)? 'carta flip desabilitado' : 'carta', travarCartas? 'desabilitado' : '']">
                         <img class="carta-frente" [src]="carta.img" alt="Frente da carta">
-                        <img class="carta-verso" src="../../assets/img/card-back.png" alt="Verso da carta">
+                        <img class="carta-verso" src="../../assets/img/reflectare_logo.png" alt="Verso da carta">
                     </div>
                 </div>                
             </div> 
