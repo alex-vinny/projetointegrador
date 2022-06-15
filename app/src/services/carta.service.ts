@@ -8,7 +8,7 @@ import { Carta } from 'src/models/Carta';
   providedIn: 'root'
 })
 export class CartaService {
-  url = environment.urlWebService + '/api/Categorias'
+  url = environment.urlWebService + '/api/Imagens'
   constructor(
     private http: HttpClient
   ) { }
@@ -18,6 +18,14 @@ export class CartaService {
   }
 
   getAllCartasByCategoriaQtd(categoria: string, qtd: number): Observable<Carta[]>{
-    return this.http.get<Carta[]>(this.url + '/' + categoria + '/' + qtd);
+    var urlFinal = '';
+    if(categoria == ''){
+      urlFinal = this.url + '?quantidade=' + qtd;
+    }
+    else {
+      urlFinal = this.url + '?categoria=' + categoria +'&quantidade=' + qtd;
+    }
+    // return this.http.get<Carta[]>(this.url + '/' + categoria + '/' + qtd);
+    return this.http.get<Carta[]>(urlFinal);
   }
 }

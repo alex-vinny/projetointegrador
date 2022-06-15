@@ -1,5 +1,8 @@
 export interface Carta {
     id: number;
-    img: string;
     estaVirada: boolean;
+    descricao: string;
+    descricaoImg: string;
+    imagem: string;
+    categoria: string;
 }

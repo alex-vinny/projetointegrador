@@ -1,3 +1,4 @@
+import { CartaService } from './../../services/carta.service';
 import { Component, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { interval } from 'rxjs/internal/observable/interval';
@@ -34,12 +35,15 @@ export class HomeJogoMemoriaComponent implements OnInit {
   contagem: Subscription;
   fimDeJogo: boolean = false;
   fimDeJogoMsg: string = '';
-  qtdSelect: string = '10'
+  qtdSelect: string = '10';
+  categoriaSelect: string = '';
+  imgTextFlip: string = '';
   
   
   constructor(
     private categoriService: CategoriaService,
     private alerts: ToastrService,
+    private cartaService: CartaService,
   ) { } 
   
   ngOnInit(): void {          
@@ -65,7 +69,7 @@ export class HomeJogoMemoriaComponent implements OnInit {
       }
     )
   }
-  
+
   iniciarContagem(): void { 
     const geradorNumeros = interval(1000);
 
@@ -106,67 +110,74 @@ export class HomeJogoMemoriaComponent implements OnInit {
   }
  
   iniciarJogo() {
-    this.cartas = [
-      { id: 1, img: "../../assets/img/bulbasaur.jpg", estaVirada: false },
-      { id: 1, img: "../../assets/img/bulbasaur.jpg", estaVirada: false },
-      { id: 2, img: "../../assets/img/charmander.jpg", estaVirada: false },
-      { id: 2, img: "../../assets/img/charmander.jpg", estaVirada: false },
-      { id: 3, img: "../../assets/img/clefairy.jpg", estaVirada: false },
-      { id: 3, img: "../../assets/img/clefairy.jpg", estaVirada: false },
-      { id: 4, img: "../../assets/img/eevee.jpg", estaVirada: false },
-      { id: 4, img: "../../assets/img/eevee.jpg", estaVirada: false },
-      { id: 5, img: "../../assets/img/growlithe.jpg", estaVirada: false },
-      { id: 5, img: "../../assets/img/growlithe.jpg", estaVirada: false },   
-      { id: 6, img: "../../assets/img/jigglypuff.jpg", estaVirada: false },
-      { id: 6, img: "../../assets/img/jigglypuff.jpg", estaVirada: false },
-      { id: 7, img: "../../assets/img/meowth.jpg", estaVirada: false },
-      { id: 7, img: "../../assets/img/meowth.jpg", estaVirada: false },
-      { id: 8, img: "../../assets/img/oddish.jpg", estaVirada: false },
-      { id: 8, img: "../../assets/img/oddish.jpg", estaVirada: false },
-      { id: 9, img: "../../assets/img/pikachu.jpg", estaVirada: false },
-      { id: 9, img: "../../assets/img/pikachu.jpg", estaVirada: false },
-      { id: 10, img: "../../assets/img/psyduck.jpg", estaVirada: false },
-      { id: 10, img: "../../assets/img/psyduck.jpg", estaVirada: false },
-      { id: 11, img: "../../assets/img/squirtle.jpg", estaVirada: false },
-      { id: 11, img: "../../assets/img/squirtle.jpg", estaVirada: false },
-      { id: 12, img: "../../assets/img/vulpix.jpg", estaVirada: false },
-      { id: 12, img: "../../assets/img/vulpix.jpg", estaVirada: false }
-    ] 
+    // this.cartas = [
+    //   { id: 1, imagem: "../../assets/img/bulbasaur.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 1, imagem: "../../assets/img/bulbasaur.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 2, imagem: "../../assets/img/charmander.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 2, imagem: "../../assets/img/charmander.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 3, imagem: "../../assets/img/clefairy.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 3, imagem: "../../assets/img/clefairy.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 4, imagem: "../../assets/img/eevee.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 4, imagem: "../../assets/img/eevee.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 5, imagem: "../../assets/img/growlithe.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 5, imagem: "../../assets/img/growlithe.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },   
+    //   { id: 6, imagem: "../../assets/img/jigglypuff.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 6, imagem: "../../assets/img/jigglypuff.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 7, imagem: "../../assets/img/meowth.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 7, imagem: "../../assets/img/meowth.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 8, imagem: "../../assets/img/oddish.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 8, imagem: "../../assets/img/oddish.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 9, imagem: "../../assets/img/pikachu.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 9, imagem: "../../assets/img/pikachu.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 10, imagem: "../../assets/img/psyduck.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 10, imagem: "../../assets/img/psyduck.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 11, imagem: "../../assets/img/squirtle.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 11, imagem: "../../assets/img/squirtle.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 12, imagem: "../../assets/img/vulpix.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
+    //   { id: 12, imagem: "../../assets/img/vulpix.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' }
+    // ] 
     
-    this.showStartGame = false;
-    this.TEMPO = parseInt(this.qtdSelect) * 20;
-    this.tempoInicial = this.TEMPO;
-    this.tempoRestante = this.TEMPO;
-    // this.pararContagem();    
-    this.travarCartas = true;
-    this.jogadas = 0;
-    this.fimDeJogo = false;     
-    this.cartas.forEach(carta => carta.estaVirada = false);
-    this.primeiraCartaVirada = true;
     
-    setTimeout(() => {      
-      this.embaralhaCartas();       
-      this.travarCartas = false;
-      this.iniciarContagem();
-      this.alerts.info("Jogo iniciado!!!",'Oba!', {
-        positionClass: 'toast-top-full-width',
-        timeOut: 8000
-      })
-    }, 500);
-
+    this.cartaService.getAllCartasByCategoriaQtd(this.categoriaSelect, parseInt(this.qtdSelect)).subscribe(
+      (response: Carta[]) => {
+        this.cartas = response;        
+        // for (const item in response) {
+        //   this.cartas.push(response[item])
+        // }
+        // console.log('Cartas:', response);
+      
+        this.showStartGame = false;
+        this.TEMPO = 600;//parseInt(this.qtdSelect) * 20;
+        this.tempoInicial = this.TEMPO;
+        this.tempoRestante = this.TEMPO;
+        // this.pararContagem();    
+        this.travarCartas = true;
+        this.jogadas = 0;
+        this.fimDeJogo = false;     
+        this.cartas.forEach(carta => carta.estaVirada = false);
+        this.primeiraCartaVirada = true;
+        
+        setTimeout(() => {      
+          this.embaralhaCartas();       
+          this.travarCartas = false;
+          this.iniciarContagem();
+          this.alerts.info("Jogo iniciado!!!",'Oba!', {
+            positionClass: 'toast-top-full-width',
+            timeOut: 8000
+          })
+        }, 500);
+      },
+      error => {
+        this.showModal = false;
+        this.alerts.error("Houve um erro ao iniciar o jogo",'Atenção', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
+      }
+    )
   }
 
-  finalizarJogo(){
-    
-    // this.arrInfoPontuacao = {
-    //   qtdTentativas: jogadas,
-    //   qtdAcertos: totalAcerto
-    // }
-    
-    
-    
-    
-    
+  finalizarJogo(){    
     this.pararContagem();
     this.fimDeJogo = true;
     this.travarCartas = true;
@@ -188,6 +199,8 @@ export class HomeJogoMemoriaComponent implements OnInit {
   }
 
   viraCarta(carta: Carta): void {
+    
+    this.imgTextFlip = carta.descricao;
     
     if(this.fimDeJogo)
       return
@@ -211,11 +224,13 @@ export class HomeJogoMemoriaComponent implements OnInit {
   }
 
   desviraCartas(): void {
+    
     setTimeout(() => {
       if(!this.fimDeJogo) {
         this.primeiraCarta.estaVirada = false;
         this.segundaCarta.estaVirada = false;
         this.travarCartas = false;
+        this.imgTextFlip = '';
       }
     }, 1500);
   }
@@ -226,7 +241,7 @@ export class HomeJogoMemoriaComponent implements OnInit {
       this.atualizarPontuacao(+10);
       this.totalAcerto++;
 
-      if(this.cartas.some(carta => carta.estaVirada === false)) {
+      if(this.cartas.some(carta => carta.estaVirada === false)) {        
         return;
       }
       else {

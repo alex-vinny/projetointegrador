@@ -5,7 +5,8 @@
         <div class="row border-bottom mt-1 pb-3">
             <div class="col-2 d-inline-block">
                 <label for="categoria" class="form-label">Categoria:</label>
-                <select id="categoria" class="form-select" aria-label="Selecione o tipo">
+                <select id="categoria" class="form-select" aria-label="Selecione o tipo"
+                [(ngModel)]="categoriaSelect">
                     <option value="" selected>Todas</option>
                     <option value="{{categoria.descricao}}" *ngFor="let categoria of arrCategoria">{{categoria.descricao}}</option>
                 </select>
@@ -82,7 +83,7 @@
                     <div *ngFor="let carta of cartas" 
                         (click)="viraCarta(carta)" 
                         [ngClass]="[(carta.estaVirada)? 'carta flip desabilitado' : 'carta', travarCartas? 'desabilitado' : '']">
-                        <img class="carta-frente" [src]="carta.img" alt="Frente da carta">
+                        <img class="carta-frente" [src]="carta.imagem" alt="Frente da carta">
                         <img class="carta-verso" src="../../assets/img/reflectare_logo.png" alt="Verso da carta">
                     </div>
                 </div>                
@@ -94,7 +95,7 @@
                 Aprendendo
                 <span class="material-symbols-outlined">school</span>
             </h1>
-            <h4 class="mt-3">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Beatae voluptas libero, amet cum veniam voluptates odit id fugit, numquam veritatis facilis, labore neque laborum repudiandae voluptatem minima voluptate quaerat? In!</h4>
+            <h4 class="mt-3">{{imgTextFlip}}</h4>
         </div>
     </div>
 </div>
