@@ -110,34 +110,7 @@ export class HomeJogoMemoriaComponent implements OnInit {
   }
  
   iniciarJogo() {
-    // this.cartas = [
-    //   { id: 1, imagem: "../../assets/img/bulbasaur.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 1, imagem: "../../assets/img/bulbasaur.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 2, imagem: "../../assets/img/charmander.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 2, imagem: "../../assets/img/charmander.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 3, imagem: "../../assets/img/clefairy.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 3, imagem: "../../assets/img/clefairy.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 4, imagem: "../../assets/img/eevee.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 4, imagem: "../../assets/img/eevee.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 5, imagem: "../../assets/img/growlithe.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 5, imagem: "../../assets/img/growlithe.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },   
-    //   { id: 6, imagem: "../../assets/img/jigglypuff.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 6, imagem: "../../assets/img/jigglypuff.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 7, imagem: "../../assets/img/meowth.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 7, imagem: "../../assets/img/meowth.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 8, imagem: "../../assets/img/oddish.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 8, imagem: "../../assets/img/oddish.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 9, imagem: "../../assets/img/pikachu.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 9, imagem: "../../assets/img/pikachu.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 10, imagem: "../../assets/img/psyduck.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 10, imagem: "../../assets/img/psyduck.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 11, imagem: "../../assets/img/squirtle.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 11, imagem: "../../assets/img/squirtle.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 12, imagem: "../../assets/img/vulpix.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' },
-    //   { id: 12, imagem: "../../assets/img/vulpix.jpg", estaVirada: false, descricao: 'Testes', descricaoImg: 'Descrição imgagem', categoria: 'categoria' }
-    // ] 
-    
-    
+    this.cartas = [];    
     this.cartaService.getAllCartasByCategoriaQtd(this.categoriaSelect, parseInt(this.qtdSelect)).subscribe(
       (response: Carta[]) => {
         this.cartas = response;        
