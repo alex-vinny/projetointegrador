@@ -13,15 +13,14 @@ namespace ProjetoIntegrador.Api.Extensions
 
             foreach (var item in cms.data.modeloImagens)
             {
-                var imagem = new ImagemDto
+                list.Add(new ImagemDto
                 {
                     Descricao = item.item.descricao,
                     DescricaoImg = item.item.url.fileName,
                     Imagem = item.item.url.url,
                     Id = item.item.codigo,
                     Categoria = item.item.categoria.descricao
-                };
-                list.Add(imagem);
+                });
             }
 
             if (shuffle)

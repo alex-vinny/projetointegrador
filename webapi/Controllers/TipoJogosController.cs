@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProjetoIntegrador.Api.Extensions;
+using ProjetoIntegrador.Api.Models;
 
 namespace api.Controllers
 {
@@ -19,11 +20,20 @@ namespace api.Controllers
             service = context;
         }
 
-        // GET: api/Usuarios
+        // GET: api/TipoJogos
         [HttpGet]
-        public async Task<IActionResult> GetUsuarios()
+        public async Task<IActionResult> GetJogos()
         {
             return this.SendResponseLista(await service.GetAll());
+        }
+
+        // GET: api/TipoJogos/{codigo}
+        [HttpGet("{codigo}")]
+        public async Task<IActionResult> GetJogo(TiposJogo codigo)
+        {
+            var jogoDto = await service.GetJogo(new JogoRequestDto(codigo));
+
+            return this.SendResponse(jogoDto);
         }
     }
 }

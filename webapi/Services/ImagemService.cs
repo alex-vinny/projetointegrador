@@ -17,17 +17,14 @@ namespace ProjetoIntegrador.Api.Services
 {
     public class ImagemService : Service, IImagemService
     {
-        private readonly BancoContext _context;
         private readonly ICategoriaService _service;
         private readonly IHttpClientFactory _clientFactory;
         private readonly Configurator _configurator;
 
-        public ImagemService(BancoContext context, 
-            ICategoriaService service,
+        public ImagemService(ICategoriaService service,
             IHttpClientFactory clientFactory,
             Configurator configurator)
         {
-            _context = context;
             _service = service;
             _clientFactory = clientFactory;
             _configurator = configurator;
@@ -77,7 +74,7 @@ namespace ProjetoIntegrador.Api.Services
             var body = new StringContent(JsonSerializer.Serialize(query), Encoding.UTF8, "application/json");
 
             using var client = _clientFactory.CreateClient();
-            //client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+
             var response = await client.PostAsync(_configurator.Get(Constants.CMS_CONFIG), body);
 
             response.EnsureSuccessStatusCode();
@@ -85,7 +82,11 @@ namespace ProjetoIntegrador.Api.Services
             using var responseStream = await response.Content.ReadAsStreamAsync();
             var cmsImagens = await JsonSerializer.DeserializeAsync<Cms<ImagensCms>>(responseStream);
 
-            return cmsImagens.MakeResponse(take);
+            var list = cmsImagens.MakeResponse(take, false);
+
+            return list
+                .Duplicate()
+                .ShuffleAndReturn();
         }
     }
 }

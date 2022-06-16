@@ -35,7 +35,7 @@ namespace ProjetoIntegrador.Api.Services
                     .Skip(dto.Skip.Value)
                     .Take(dto.Take.Value);
 
-                if(@where != null)
+                if (@where != null)
                     query = query.Where(@where);
 
                 var result = query.Select(c => c.MakeResponse());
