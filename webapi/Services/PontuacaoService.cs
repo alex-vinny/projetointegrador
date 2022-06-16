@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProjetoIntegrador.Api.Data;
 using ProjetoIntegrador.Api.Dtos;
 using ProjetoIntegrador.Api.Models;
@@ -13,45 +13,119 @@ namespace ProjetoIntegrador.Api.Services
     public class PontuacaoService : Service, IPontucaoService
     {
         protected readonly BancoContext _context;
+        private readonly ITipoJogoService _jogoService;
+        private readonly IUsuarioService _usuarioService;
 
-        public PontuacaoService(BancoContext context)
+        public PontuacaoService(BancoContext context,
+            ITipoJogoService jogoService,
+            IUsuarioService usuarioService)
         {
             _context = context;
+            _jogoService = jogoService;
+            _usuarioService = usuarioService;
         }
 
         public async Task<ResponseDto> Save(PontuacaoCreationRequestDto request)
         {
-            return await Task.FromResult(GetMockResponse());
-        }
+            Usuario usuario = null;
+            if (request.Usuario != null)
+                usuario = await _usuarioService.GetUsuario(request.Usuario.Value);
+            else
+                usuario = await _usuarioService.GetUsuarioByEmail(request.Email);
 
+            object parameter = null;
+            if (request.TipoJogoId.HasValue)
+                parameter = request.TipoJogoId.Value;
+            else
+                parameter = request.TipoJogo;
+
+            Jogo jogo = await _jogoService.Get(new JogoRequestDto(parameter));
+
+            return await Save(usuario, jogo, request);
+        }
+        
         public async Task<ResponseDto> Update(int id, PontuacaoRequestDto request)
         {
-            return await Task.FromResult(GetMockResponse(id));
+            try
+            {
+                var model = await GetPontuacao(id);
+                if (model == null)
+                    return Error($"Pontuação com o identificador: {id} não localizado.");
+                
+                model.Pontos = request.QtdPontos;
+                model.Itens = request.QtdItems;
+                model.Erros = request.QtdErros;
+
+                await UpdatePontuacao(model.ID, model);
+
+                return model.MakeResponse();
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
         }
 
-        private ResponseDto GetMockResponse(int? id = null)
+        private async Task<Pontuacao> GetPontuacao(int id)
         {
-            id = id ?? new Random().Next(1, 100);
-            var jogo = new ResponseDto();
-            jogo.Add("id", id);
-            jogo.Add("codigo", "REFLECTERE");
-            jogo.Add("descricao", "Reflectere: Jogo de Palavras Cruzadas");
+            return await _context
+                .Pontuacoes
+                .Include(c => c.Jogo)
+                .Include(c => c.Autor)
+                .FirstOrDefaultAsync(c => c.ID.Equals(id));
+        }
 
-            var usuario = new ResponseDto();
-            usuario.Add("id", new Random().Next(1, 100));
-            usuario.Add("email", "email@email.com");
-            usuario.Add("nome", "Jogador #1");
+        private async Task UpdatePontuacao(int id, Pontuacao model)
+        {
+            if (ExistsPontuacao(id))
+            {
+                var entity = await _context.Pontuacoes.FindAsync(id);
+                _context.Entry(entity).State = EntityState.Modified;
+                _context.Pontuacoes.Update(model);
 
-            var dto = new ResponseDto();
-            dto.Add("id", new Random().Next(1, 1000));
-            dto.Add("usuario", usuario);
-            dto.Add("tipoJogo", jogo);
-            dto.Add("data", DateTime.Now);
-            dto.Add("pontos", 15);
-            dto.Add("erros", 2);
-            dto.Add("itens", 20);
+                await _context.SaveChangesAsync();
+            }
+        }
 
-            return dto;
+        public async Task<ResponseDto> Save(Usuario usuario, Jogo jogo, PontuacaoCreationRequestDto request)
+        {
+            try
+            {
+                if (usuario == null)
+                    return Null($"Não foi possível salvar a pontuação. Usuário não cadastrado.");
+
+                if (jogo == null)
+                    return Null($"Não foi possível salvar a pontuação. Tipo de jogo não cadastrado.");
+
+                var model = new Pontuacao();
+                model.Autor = usuario;
+                model.Jogo = jogo;
+                model.DataJogo = request.DataJogo.HasValue ? request.DataJogo.Value : DateTime.UtcNow;
+                model.Pontos = request.QtdPontos;
+                model.Itens = request.QtdItems;
+                model.Erros = request.QtdErros;
+
+                await SavePontuacao(model);
+
+                return model.MakeResponse();
+            }
+            catch (Exception ex)
+            {
+                return Exception(ex);
+            }
+        }
+
+        private async Task<Pontuacao> SavePontuacao(Pontuacao model)
+        {
+            _context.Pontuacoes.Add(model);
+            await _context.SaveChangesAsync();
+
+            return model;
+        }
+
+        private bool ExistsPontuacao(int id)
+        {
+            return _context.Pontuacoes.Any(e => e.ID == id);
         }
     }
 }

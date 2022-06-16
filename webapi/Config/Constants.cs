@@ -8,7 +8,7 @@
         public readonly static int MAX_PALAVRAS = -1;
         public readonly static int TAMANHO_PAGINA = 5000;
         public readonly static string CMS_CONFIG = "CmsUrlApi";
-        public readonly static int QTD_IMAGENS = 20;
+        public readonly static int QTD_IMAGENS = 10;
         public readonly static string CONFIG_DEFAULT_MSG = "Configuração {0} não encontrada.";
         public readonly static string CMS_FILTER_SYMBOL = "###";
         public readonly static string CMS_IMAGENS_QUERY = @"

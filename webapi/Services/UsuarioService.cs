@@ -66,7 +66,7 @@ namespace ProjetoIntegrador.Api.Services
             }
         }
 
-        private async Task<Usuario> GetUsuario(int id)
+        public async Task<Usuario> GetUsuario(int id)
         {
             return await _context.Usuarios.FindAsync(id);
         }
@@ -87,7 +87,7 @@ namespace ProjetoIntegrador.Api.Services
             }
         }
 
-        private async Task<Usuario> GetUsuarioByEmail(string email)
+        public async Task<Usuario> GetUsuarioByEmail(string email)
         {
             return await _context.Usuarios
                             .Where(c => c.Email.Equals(email))
