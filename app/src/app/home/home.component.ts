@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
       this.user = sessionStorage.getItem('usuario');
       this.usuario = JSON.parse(this.user);
     }
-    console.log('Usuario: ', this.usuario);
+    // console.log('Usuario: ', this.usuario);
     this.authVerificacao();
     // this.getAllCategorias();
   }

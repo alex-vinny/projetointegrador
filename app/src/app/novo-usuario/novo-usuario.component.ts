@@ -45,7 +45,7 @@ export class NovoUsuarioComponent implements OnInit {
     var pPerfil = this.registerForm.get('perfil')?.value;
     this.usuario.perfil = parseInt(pPerfil);
     
-    console.log('Usuário: ', this.usuario);
+    // console.log('Usuário: ', this.usuario);
     
     this.usuarioService.postUsuario(this.usuario).subscribe(
       (novoUsuario: any) => {

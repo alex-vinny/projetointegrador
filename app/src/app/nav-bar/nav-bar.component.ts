@@ -32,7 +32,7 @@ export class NavBarComponent implements OnInit {
       this.userLogado = JSON.parse(this.user);
     }
 
-    console.log('Input: ', this.showBtnCadastrarPalavras)
+    // console.log('Input: ', this.showBtnCadastrarPalavras)
   }
 
   logout(){

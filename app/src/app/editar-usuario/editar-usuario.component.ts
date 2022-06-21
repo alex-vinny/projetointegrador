@@ -57,7 +57,7 @@ export class EditarUsuarioComponent implements OnInit {
     this.user = sessionStorage.getItem('usuario');
     this.usuarioGet = JSON.parse(this.user);
 
-    console.log('UsuarioGet: ', this.usuarioGet);
+    // console.log('UsuarioGet: ', this.usuarioGet);
 
     this.registerForm.get('nome')?.setValue(this.usuarioGet.nome);
     this.registerForm.get('perfil')?.setValue(this.usuarioGet.perfil.codigo.toString());
@@ -77,7 +77,7 @@ export class EditarUsuarioComponent implements OnInit {
     }
     var email = this.registerForm.get('email')?.value;
    
-    console.log('Usuário: ', userUpdate);
+    // console.log('Usuário: ', userUpdate);
     
     this.usuarioService.putUsuario(email, userUpdate).subscribe(
       (novoUsuario: any) => {
@@ -95,7 +95,7 @@ export class EditarUsuarioComponent implements OnInit {
         }, 5000);
 
       }, error => {
-        console.log('Error: ', error);
+        // console.log('Error: ', error);
         this.showModal = false;
         if(error.status == 422){
           this.alerts.warning("Já há um usuário cadastrado com o email informado",'Atenção!', {

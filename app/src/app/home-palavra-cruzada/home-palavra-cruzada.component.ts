@@ -1,3 +1,5 @@
+import { PontuacaoService } from './../../services/pontuacao.service';
+import { Pontuacao } from './../../models/pontuacao';
 import { UtilService } from './../../services/util.service';
 import { SessaoService } from './../../services/sessao.service';
 import { PalavraService } from './../../services/palavra.service';
@@ -36,6 +38,8 @@ export class HomePalavraCruzadaComponent implements OnInit {
   showStartGame = true;
   idSessao: number;
   showBtnCadastrarPalav = true;
+  pontuacaoJogo: Pontuacao;
+  idJogo: number
 
   constructor(
     private router: Router,
@@ -44,7 +48,8 @@ export class HomePalavraCruzadaComponent implements OnInit {
     private palavraService: PalavraService,
     private alerts: ToastrService,
     private sessaoService: SessaoService,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private pontuacaoService: PontuacaoService
   ) { }
 
   ngOnInit() { 
@@ -52,7 +57,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
       this.user = sessionStorage.getItem('usuario');
       this.usuario = JSON.parse(this.user);
     }
-    console.log('Usuario: ', this.usuario);
+    // console.log('Usuario: ', this.usuario);
     this.authVerificacao();
     this.getAllCategorias();
     this.addToTest();
@@ -74,7 +79,10 @@ export class HomePalavraCruzadaComponent implements OnInit {
       },
       error => {
         this.showModal = false;
-        console.log(error);
+        this.alerts.error("Houve um erro ao pegar as categorias do jogo",'Atenção', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
       }
     )
   }
@@ -96,12 +104,35 @@ export class HomePalavraCruzadaComponent implements OnInit {
     this.showStartGame = true;
   }
 
+  iniciarJogo(){
+    this.pontuacaoJogo = {
+      qtdItems: 0,
+      qtdPontos: 0,
+      qtdErros: 0,
+      tipoJogoId: 1,
+      tipoJogo: "REFLECTERE",
+      email: this.usuario.email,
+      usuario: this.usuario.id,
+      dataJogo: new Date()
+    }
+    this.pontuacaoService.getIdPontuacao(this.pontuacaoJogo).subscribe(
+      (response: any) => {
+        this.idJogo = response.id;
+        this.getPalavras();
+    },error => {
+      this.alerts.error("Houve um erro ao iniciar o jogo",'Atenção', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })      
+    })
+  }
+
   getPalavras(){
     this.showStartGame = false;
     this.showModal = true;
     this.arrPalavras = [];
     this.loaded = false;
-    this.inputJson = [];
+    this.inputJson = [];    
     
     let objPalavra = document.getElementById('categoria') as HTMLInputElement
 
@@ -110,12 +141,11 @@ export class HomePalavraCruzadaComponent implements OnInit {
     }
     else {
       this.getPalavrasByQtd(this.qtdPalavras);
-    }
-    
+    }    
     this.postSessao(this.usuario.email);
-  }
+  } 
 
-  postSessao(email: string){
+  postSessao(email: string){    
 
     var dt = new Date();
     var dtIncio = {
@@ -124,11 +154,14 @@ export class HomePalavraCruzadaComponent implements OnInit {
     //2021-11-12T19:00:44.217Z
     this.sessaoService.postSessao(email, dtIncio).subscribe(
       (response: any) => {
-        console.log('Sessão:', response);
+        // console.log('Sessão:', response);
       },
       error => {
         this.showModal = false;
-        console.log(error);
+        this.alerts.error("Houve um erro ao iniciar a sessao do jogo",'Atenção', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
       }
     )
   }
@@ -138,7 +171,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
     this.palavraService.getAllPalavrasByQtd(qtd).subscribe(
       (response: Palavra[]) => {
         this.arrPalavras = response;
-        console.log('AllPalavras: ', response);
+        // console.log('AllPalavras: ', response);
         this.loaded = true;
         for (const palavra of response) {
           this.inputJson.push({
@@ -147,12 +180,15 @@ export class HomePalavraCruzadaComponent implements OnInit {
           });    
         }
         this.preLayout();
-        console.log("PalavrasIndex: ", this.inputJson);
+        // console.log("PalavrasIndex: ", this.inputJson);
       },
       error => {
         this.loaded = false;
         this.showModal = false;
-        console.log(error)
+        this.alerts.error("Houve erro ao pegar as palavras por QTD",'Atenção', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
       }
     )
   }
@@ -160,7 +196,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
   getPalavraByCategoriaQtd(categoria: string, qtd: number){
     this.palavraService.getAllPalavrasByCategoriaQtd(categoria, qtd).subscribe(
       (response: Palavra[]) => {
-        console.log('AllPalavras: ', response);
+        // console.log('AllPalavras: ', response);
         this.arrPalavras = response
         this.loaded = true;
         for (const palavra of response) {
@@ -171,12 +207,15 @@ export class HomePalavraCruzadaComponent implements OnInit {
         }
 
         this.preLayout();
-        console.log("PalavrasIndex: ", this.inputJson);
+        // console.log("PalavrasIndex: ", this.inputJson);
       },
       error => {
         this.showModal = false;
         this.loaded = false;
-        console.log(error)
+        this.alerts.error("Houve erro pegar palavras por qtd e categoria",'Atenção', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
       }
     )
 
@@ -190,10 +229,10 @@ export class HomePalavraCruzadaComponent implements OnInit {
     var table = layout.table; // table as two-dimensional array
     this.outputHtml = layout.table_string; // table as plain text (with HTML line breaks)
     this.outputJson = layout.result;
-    console.log('OutputJson: ', this.outputJson);
+    // console.log('OutputJson: ', this.outputJson);
     //console.log('OutputHTML: ', this.outputHtml);
     this.tableResp = table;
-    console.log('Table: ', this.tableResp);
+    // console.log('Table: ', this.tableResp);
     this.layoutHTML(table);
   }
 
@@ -226,17 +265,18 @@ export class HomePalavraCruzadaComponent implements OnInit {
 
   setIndex(x: number, y: number, index: number){
     var objTblHtml = document.getElementById('table-cross') as HTMLElement;
-    console.log('x: ', x, 'y: ', y, 'index: ', index);    
+    // console.log('x: ', x, 'y: ', y, 'index: ', index);    
     
     try {
       var item = objTblHtml.children[0].childNodes[(y-1)].childNodes[(x-1)] as HTMLElement
       if(item.childElementCount > 1){
-        console.log('Item: ', item, 'contem: 2 elementros');
+        // console.log('Item: ', item, 'contem: 2 elementros');
         item.innerHTML = "<span class='index-dicas-seg'>" + index +"</span>" + item.innerHTML;
       }
       else{ 
         item.innerHTML = "<span class='index-dicas'>" + index +"</span>" + item.innerHTML;
-      }      
+      }
+      console.clear();      
     } catch (error) {
       this.getPalavras();
     }   
@@ -255,7 +295,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
       var index = word.position - 1;
 
       if(word.orientation == 'across'){
-        console.log('word: ', word);
+        // console.log('word: ', word);
         for (let i = 0; i < word.answer.length; i++) {
           let x = (word.startx - 1) + i;
           let y = word.starty - 1;
@@ -275,17 +315,17 @@ export class HomePalavraCruzadaComponent implements OnInit {
             status: 'Nok'
           });
         }
-        console.log ('Palavra Encontrada Cross: ', validWord);
+        // console.log ('Palavra Encontrada Cross: ', validWord);
       }
       else {
-        console.log('word: ', word);
+        // console.log('word: ', word);
         for (let i = 0; i < word.answer.length; i++) {
           let x = word.startx - 1;
           let y = (word.starty - 1) + i;
           var pre = objTblHtml.children[0].childNodes[y].childNodes[x].lastChild as HTMLInputElement
           validWord += pre.value;
         }
-        console.log ('Palavra Encontrada Down: ', validWord);
+        // console.log ('Palavra Encontrada Down: ', validWord);
 
         if(word.answer.replace(/ /g,"").toUpperCase() == validWord.replace(/ /g,"").toUpperCase()){
           this.arrValid.push({
@@ -300,7 +340,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
           });
         }
       }
-      console.log('arrValid: ', this.arrValid);  
+      // console.log('arrValid: ', this.arrValid);  
      
     }
                 
@@ -319,7 +359,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
     } 
 
     this.msgFinal(invalid);
-    this.putSessao(invalid);
+    this.putSessao(invalid);    
   }
 
   msgFinal(invalid: number){
@@ -336,6 +376,7 @@ export class HomePalavraCruzadaComponent implements OnInit {
       })
     }
     this.showStartGame = true;
+    this.finalizarJogo(invalid);
   }
 
   putSessao(qtdErros: number){
@@ -349,13 +390,37 @@ export class HomePalavraCruzadaComponent implements OnInit {
     //2021-11-12T19:00:44.217Z
     this.sessaoService.postSessao(this.usuario.email, data).subscribe(
       (response: any) => {
-        console.log('Sessão Put:', response);
+        // console.log('Sessão Put:', response);
       },
       error => {
         this.showModal = false;
-        console.log(error);
+        this.alerts.error("Houve erro ao inserir a sessão do jogo",'Atenção', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
       }
     )
+  }
+
+  finalizarJogo(qtdErros: number){  
+    let pontuacaoFinal = {
+      qtdItems: this.qtdPalavras,
+      qtdPontos: this.qtdPalavras - qtdErros,
+      qtdErros: qtdErros
+    }
+
+    this.pontuacaoService.putPontuacao(this.idJogo, pontuacaoFinal).subscribe(
+      (response: any) => {
+        this.alerts.warning("Jogo Finalizado!!!",'Atenção!', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
+    },error => {
+      this.alerts.error("Houve um erro finalizar o jogo",'Atenção', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })      
+    })
   }
 
 }
