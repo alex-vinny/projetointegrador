@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms'
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,9 +21,11 @@ import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.componen
 import { ModalComponent } from './modal/modal.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.component';
+import { HomeJogoMemoriaComponent } from './home-jogo-memoria/home-jogo-memoria.component';
+import { HomePalavraCruzadaComponent } from './home-palavra-cruzada/home-palavra-cruzada.component';
 
 @NgModule({
-  declarations: [									
+  declarations: [											
       AppComponent,
       LoginComponent,
       CadastroComponent,
@@ -33,7 +36,9 @@ import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.componen
       EditarUsuarioComponent,
       ModalComponent,
       RankingComponent,
-      EsqueceuSenhaComponent
+      EsqueceuSenhaComponent,
+      HomeJogoMemoriaComponent,
+      HomePalavraCruzadaComponent
    ],
   imports: [
     BrowserModule,
@@ -46,7 +51,8 @@ import { EsqueceuSenhaComponent } from './esqueceu-senha/esqueceu-senha.componen
       progressBar: true
     }),
     TooltipModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
 
   ],
   providers: [UsuarioService],

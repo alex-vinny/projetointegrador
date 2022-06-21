@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
 
     this.usuarioService.getUsuarioByEmailSenha(objEmail.value, objPassword.value).subscribe(
       (response: Usuario) => {
-        console.log('Usuarios:', response);
+        // console.log('Usuarios:', response);
         sessionStorage.setItem('usuario', JSON.stringify(response));
         sessionStorage.setItem('auth', 'true');
         this.router.navigate(['home']);

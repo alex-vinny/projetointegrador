@@ -71,7 +71,7 @@ export class CadastroComponent implements OnInit {
   getPalavras(){
     this.palavraService.getAllPalavras().subscribe(
       (response: Palavra[]) => {
-        console.log('Palavras:', response);
+        // console.log('Palavras:', response);
         this.arrPalavras = response;
         this.getAllCategorias();
       },
@@ -119,7 +119,7 @@ export class CadastroComponent implements OnInit {
       serieEscolar: parseInt(objSerieEscolar.value)
     }
 
-    console.log('PalavraNew: ', newPalavra);
+    // console.log('PalavraNew: ', newPalavra);
 
     this.palavraService.postPalavra(newPalavra).subscribe(
       (newPalavra: any) => {
@@ -154,7 +154,7 @@ export class CadastroComponent implements OnInit {
   sendToForm(){
     this.showModal = true;
     this.newItem = false;
-    console.log('ItemSelect: ', this.palavraSelect);
+    // console.log('ItemSelect: ', this.palavraSelect);
 
     let objPalavra = document.getElementById('palavra') as HTMLInputElement
     let objDica = document.getElementById('dica') as HTMLInputElement
@@ -214,7 +214,7 @@ export class CadastroComponent implements OnInit {
       positionClass: 'toast-top-full-width',
       timeOut: 2000
     });
-    console.log('ArrPalavras: ', this.arrPalavras)
+    // console.log('ArrPalavras: ', this.arrPalavras)
     this.clearForm();
   }
 
