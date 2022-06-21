@@ -1,26 +1,38 @@
-#table-cross td{
-    width: 30px !important;
-    max-width: 30px !important;
+.btn-home{
+    height: 210px;
+    width: 200px;
+    border-radius: 5px;
+    border: solid 1px ghostwhite;
+    margin-top: 10Vh;
+    cursor: pointer;
+    transition: transform 1s;
+
 }
-#tb-dicas tr:nth-child(even) {
-    background-color: #f2f2f2;
+.btn-home:hover{
+    height: 220px;
+    width: 200px;
+    border: solid 1px rgba(128, 255, 128);
+    float: inherit;
+    font-weight: 400;
 }
-.input-format{
-    width: 40px !important;
-    height: 40px !important;
+.icon-btn{
+    font-size: 75px;
+    margin: 0 auto !important;
 }
-.btn-iniciar{
-    margin-top: 1.8rem;
-}
-.w-td-index{
-    width: 50px !important;
-}
-.overflow-x-auto{
-    overflow-x: auto;
-}
-.img-reflectare{
-    width: 40%;
-    margin-top: 10%;
-    opacity: 0.6;
+
+.btn-home:hover > .icon-btn{
+    transform: translateX(0px) scale(1.2);
     text-align: center;
+    transition: transform 1s;
+    object-fit: contain;
+}
+.img-home-btn{
+    width: 100px;
+    padding-top: 2vh;
+}
+.btn-home:hover > .img-home-btn{
+    transform: translateX(0px) scale(1.2);
+    text-align: center;
+    transition: transform 1s;
+    object-fit: contain;
 }

@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { UsuarioService } from './../../services/usuario.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Usuario } from 'src/models/usuario';
 
@@ -12,6 +12,8 @@ import { Usuario } from 'src/models/usuario';
 export class NavBarComponent implements OnInit {
   userLogado: Usuario
   user: any;
+  // @Input() showBtnCadastrarPalavra: boolean
+  @Input() showBtnCadastrarPalavras: boolean = true;
 
   constructor(
     private alerts: ToastrService,
@@ -29,6 +31,8 @@ export class NavBarComponent implements OnInit {
       this.user = sessionStorage.getItem('usuario');
       this.userLogado = JSON.parse(this.user);
     }
+
+    // console.log('Input: ', this.showBtnCadastrarPalavras)
   }
 
   logout(){
@@ -39,5 +43,6 @@ export class NavBarComponent implements OnInit {
   editaPerfil(){
     this.router.navigate(['editar-usuario']);
   }
+
 
 }
