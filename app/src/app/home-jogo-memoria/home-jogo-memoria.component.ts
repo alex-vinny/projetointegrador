@@ -1,9 +1,12 @@
+import { Usuario } from './../../models/usuario';
+import { PontuacaoService } from './../../services/pontuacao.service';
+import { Pontuacao } from './../../models/pontuacao';
 import { CartaService } from './../../services/carta.service';
 import { Component, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { interval } from 'rxjs/internal/observable/interval';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { Carta } from 'src/models/Carta';
+import { Carta } from 'src/models/carta';
 import { Categoria } from 'src/models/categoria';
 import { CategoriaService } from 'src/services/categoria.service';
 
@@ -38,18 +41,25 @@ export class HomeJogoMemoriaComponent implements OnInit {
   qtdSelect: string = '10';
   categoriaSelect: string = '';
   imgTextFlip: string = '';
+  pontuacaoJogo: Pontuacao;
+  user: any;
+  userLogado: Usuario;
+  idJogo: number
   
   
   constructor(
     private categoriService: CategoriaService,
     private alerts: ToastrService,
     private cartaService: CartaService,
+    private pontuacaoService: PontuacaoService
   ) { } 
   
   ngOnInit(): void {          
     // this.cartas = CARTAS.concat(CARTAS.map(carta => ({...carta})));
     this.showModal = true;
     this.getAllCategorias();
+    this.user = sessionStorage.getItem('usuario');
+    this.userLogado = JSON.parse(this.user);
   }
   
   ngOnDestroy(): void {
@@ -103,13 +113,36 @@ export class HomeJogoMemoriaComponent implements OnInit {
         timeOut: 8000
       })
     }
-
     this.fimDeJogo = true;
     this.travarCartas = true;
     this.showStartGame = true;
   }
+
+  iniciarJogo(){
+    this.pontuacaoJogo = {
+      qtdItems: 0,
+      qtdPontos: 0,
+      qtdErros: 0,
+      tipoJogoId: 2,
+      tipoJogo: "INMEMORY",
+      email: this.userLogado.email,
+      usuario: this.userLogado.id,
+      dataJogo: new Date()
+    }    
+    
+    this.pontuacaoService.getIdPontuacao(this.pontuacaoJogo).subscribe(
+      (response: any) => {
+        this.idJogo = response.id;
+        this.iniciarJogo_();
+    },error => {
+      this.alerts.error("Houve um erro ao iniciar o jogo",'Atenção', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })      
+    })
+  }
  
-  iniciarJogo() {
+  iniciarJogo_() {    
     this.cartas = [];    
     this.cartaService.getAllCartasByCategoriaQtd(this.categoriaSelect, parseInt(this.qtdSelect)).subscribe(
       (response: Carta[]) => {
@@ -152,13 +185,27 @@ export class HomeJogoMemoriaComponent implements OnInit {
 
   finalizarJogo(){    
     this.pararContagem();
-    this.fimDeJogo = true;
-    this.travarCartas = true;
-    this.showStartGame = true;
 
-    this.alerts.warning("Jogo Finalizado!!!",'Atenção!', {
-      positionClass: 'toast-top-full-width',
-      timeOut: 8000
+    let pontuacaoFinal = {
+      qtdItems: parseInt(this.qtdSelect),
+      qtdPontos: this.totalAcerto,
+      qtdErros: this.jogadas
+    }
+
+    this.pontuacaoService.putPontuacao(this.idJogo, pontuacaoFinal).subscribe(
+      (response: any) => {
+        this.fimDeJogo = true;
+        this.travarCartas = true;
+        this.showStartGame = true;
+        this.alerts.warning("Jogo Finalizado!!!",'Atenção!', {
+          positionClass: 'toast-top-full-width',
+          timeOut: 8000
+        })
+    },error => {
+      this.alerts.error("Houve um erro finalizar o jogo",'Atenção', {
+        positionClass: 'toast-top-full-width',
+        timeOut: 8000
+      })      
     })
   }
 
