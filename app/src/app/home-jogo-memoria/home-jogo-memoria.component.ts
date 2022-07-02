@@ -144,43 +144,51 @@ export class HomeJogoMemoriaComponent implements OnInit {
  
   iniciarJogo_() {    
     this.cartas = [];    
-    this.cartaService.getAllCartasByCategoriaQtd(this.categoriaSelect, parseInt(this.qtdSelect)).subscribe(
-      (response: Carta[]) => {
-        this.cartas = response;        
-        // for (const item in response) {
-        //   this.cartas.push(response[item])
-        // }
-        // console.log('Cartas:', response);
+    this.cartaService.getAllCartasByCategoriaQtd(
+      this.categoriaSelect, 
+      parseInt(this.qtdSelect))
+        .subscribe((response: Carta[]) => {
+          this.cartas = response;        
+          // for (const item in response) {
+          //   this.cartas.push(response[item])
+          // }
+          // console.log('Cartas:', response);
       
-        this.showStartGame = false;
-        this.TEMPO = 600;//parseInt(this.qtdSelect) * 20;
-        this.tempoInicial = this.TEMPO;
-        this.tempoRestante = this.TEMPO;
-        // this.pararContagem();    
-        this.travarCartas = true;
-        this.jogadas = 0;
-        this.fimDeJogo = false;     
-        this.cartas.forEach(carta => carta.estaVirada = false);
-        this.primeiraCartaVirada = true;
+          this.showStartGame = false;
+          this.TEMPO = 600;//parseInt(this.qtdSelect) * 20;
+          this.tempoInicial = this.TEMPO;
+          this.tempoRestante = this.TEMPO;
+          // this.pararContagem();    
+          this.travarCartas = true;
+          this.jogadas = 0;
+          this.fimDeJogo = false;     
+          this.cartas.forEach(carta => carta.estaVirada = false);
+          this.primeiraCartaVirada = true;
         
-        setTimeout(() => {      
-          this.embaralhaCartas();       
-          this.travarCartas = false;
-          this.iniciarContagem();
-          this.alerts.info("Jogo iniciado!!!",'Oba!', {
+          setTimeout(() => {      
+            this.embaralhaCartas();       
+            this.travarCartas = false;
+            this.iniciarContagem();
+            this.alerts.info("Jogo iniciado!!!",'Oba!', {
+              positionClass: 'toast-top-full-width',
+              timeOut: 8000
+            })
+          }, 500);
+        }, response => {
+          const error = response.error;
+          let msg = "Houve um erro ao iniciar o jogo";
+          console.log(error);
+
+          if (error && error.erro && error.erro.mensagens) {
+            msg = error.erro.mensagens.join();
+          }
+
+          this.showModal = false;
+          this.alerts.error(msg, 'Atenção', {
             positionClass: 'toast-top-full-width',
             timeOut: 8000
           })
-        }, 500);
-      },
-      error => {
-        this.showModal = false;
-        this.alerts.error("Houve um erro ao iniciar o jogo",'Atenção', {
-          positionClass: 'toast-top-full-width',
-          timeOut: 8000
-        })
-      }
-    )
+        });
   }
 
   finalizarJogo(){    
