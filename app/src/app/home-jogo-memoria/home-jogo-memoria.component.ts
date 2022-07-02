@@ -177,7 +177,6 @@ export class HomeJogoMemoriaComponent implements OnInit {
         }, response => {
           const error = response.error;
           let msg = "Houve um erro ao iniciar o jogo";
-          console.log(error);
 
           if (error && error.erro && error.erro.mensagens) {
             msg = error.erro.mensagens.join();
