@@ -32,7 +32,7 @@ namespace ProjetoIntegrador.Api.Services
             var erro = new ErrorDto();
             erro.Codigo = type;
             
-            if(messages.Any())
+            if (messages.Any())
             {
                 foreach (var message in messages)
                 {

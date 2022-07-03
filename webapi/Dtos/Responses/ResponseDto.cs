@@ -1,6 +1,3 @@
-using ProjetoIntegrador.Api.Config;
-using ProjetoIntegrador.Api.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,6 +17,15 @@ namespace ProjetoIntegrador.Api.Dtos
             {
                 foreach (var msg in messages)
                     erros.Mensagens.Add(msg);
+            }
+        }
+
+        public new object this[string index]
+        {
+            get
+            {
+                TryGetValue(index, out object item);
+                return item;
             }
         }
 
