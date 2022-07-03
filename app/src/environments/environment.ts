@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  urlWebService: 'https://localhost:5001',
+  // urlWebService: 'https://localhost:5001',
+  urlWebService: 'https://projeto-integrador-turma-002.herokuapp.com',
   BaseUrl: '/api'
 };
 
