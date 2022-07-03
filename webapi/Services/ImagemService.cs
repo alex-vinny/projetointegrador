@@ -32,36 +32,46 @@ namespace ProjetoIntegrador.Api.Services
 
         public async Task<List<ResponseDto>> GetByCategoria(string categoria, int quantidade)
         {
-            int categoriaId = 0;
+            ResponseDto categoriaItem = null;
 
             if (!string.IsNullOrEmpty(categoria))
             {
                 if (!categoria.IsNumeric())
                 {
-                    var categoriaItem = await _service.GetByDescricao(categoria);
+                    categoriaItem = await _service.GetByDescricao(categoria);
                     if (categoriaItem["id"] == null)
                         return categoriaItem.AsList();
 
-                    if (!int.TryParse(categoriaItem["id"].ToString(), out categoriaId))
+                    if (!int.TryParse(categoriaItem["id"].ToString(), out _))
                         return Null($"Categoria {categoria} não cadastrada.").AsList();
                 }
                 else
                 {
-                    if (!int.TryParse(categoria, out categoriaId))
-                        return Null($"Categoria {categoria} não é um número inteiro.").AsList();
+                    if (!int.TryParse(categoria, out _))
+                        return Null($"Código da categoria {categoria} não é um número inteiro.").AsList();
                 }
             }
 
-            return await GetImagensAsResponse(quantidade, categoria: categoriaId);
+            return await GetImagensAsResponse(quantidade, categoriaDto: categoriaItem);
         }
 
-        public async Task<List<ResponseDto>> GetImagensAsResponse(int take, int? categoria = null)
+        public async Task<List<ResponseDto>> GetImagensAsResponse(int take, ResponseDto categoriaDto = null)
         {
+            int? categoria = null;
+            if (categoriaDto != null)
+            {
+                if (int.TryParse(categoriaDto["id"].ToString(), out int id))
+                    categoria = id;
+            }
+
             var imagens = await GetImagens(take, categoria);
             
             if (imagens == null || imagens.Count == 0)
-                return Null($"Nenhuma imagem encontrada.").AsList();
-            
+            {
+                var msg = $"Nenhuma imagem encontrada{(categoriaDto != null ? " para a categoria " + categoriaDto["descricao"].ToString() : "")}.";
+                return Null(msg).AsList();
+            }
+
             return imagens
                 .Select(c => c.MakeResponse())
                 .ToList();
